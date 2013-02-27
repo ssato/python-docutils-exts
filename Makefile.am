@@ -1,5 +1,11 @@
 EXTRA_DIST = README.rst python-docutils-exts.spec.in rpm.mk
 
+EXTRA_DIST += \
+$(wildcard examples/rst2odt/*) \
+$(wildcard examples/rst2odt/images/*/*.*) \
+$(wildcard examples/rst2odt/logs/*.txt) \
+$(NULL)
+
 abs_srcdir  ?= .
 include $(abs_srcdir)/rpm.mk
 
