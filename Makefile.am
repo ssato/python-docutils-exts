@@ -4,6 +4,7 @@ EXTRA_DIST += \
 $(wildcard examples/rst2odt/*) \
 $(wildcard examples/rst2odt/images/*/*.*) \
 $(wildcard examples/rst2odt/logs/*.txt) \
+$(wildcard examples/rst2pdf/*) \
 $(NULL)
 
 abs_srcdir  ?= .
