@@ -1,0 +1,13 @@
+ssato@localhost% cat << EOF > hello.c
+heredoc> #include <stdio.h>
+heredoc> 
+heredoc> int
+heredoc> main(void) {
+heredoc>   printf("Hello, world!\n");
+heredoc>   return 0;
+heredoc> }
+heredoc> EOF
+ssato@localhost% gcc -Wall -O2 hello.c -o hello
+ssato@localhost% ./hello
+Hello, world!
+ssato@localhost%
