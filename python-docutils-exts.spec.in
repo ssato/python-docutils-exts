@@ -43,7 +43,7 @@ rm -rf \$RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README.rst
+%doc README.rst examples
 %{_bindir}/*
 %{_datadir}/rst2odt/aux/*
 %{_datadir}/rst2odt/styles/*
