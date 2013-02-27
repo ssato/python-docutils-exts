@@ -1,0 +1,48 @@
+<?py
+# SEE ALSO: http://www.kuwata-lab.com/tenjin/pytenjin-users-guide.html
+
+def getVar(key, ctxt=_context):
+    return ctxt.get(key, "")
+
+#end
+?>
+
+
+.. role:: normal
+
+
+<?py if getVar("title"): ?>
+.. raw:: pdf
+
+   Spacer 0 5cm
+
+.. class:: title
+
+#{title}
+<?py #end ?>
+
+<?py if getVar("subtitle"): ?>
+.. raw:: pdf
+
+   Spacer 0 2cm
+
+.. class:: subtitle
+
+#{subtitle}
+<?py #end ?>
+
+<?py if getVar("author"): ?>
+.. raw:: pdf
+
+   Spacer 0 2cm
+
+.. class:: normal
+
+#{author}
+<?py #end ?>
+
+<?py if getVar("date"): ?>
+
+:normal:`#{date}`
+
+<?py #end ?>
