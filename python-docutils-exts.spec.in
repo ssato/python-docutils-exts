@@ -47,7 +47,6 @@ rm -rf \$RPM_BUILD_ROOT
 %{_bindir}/*
 %{_datadir}/rst2odt/aux/*
 %{_datadir}/rst2odt/styles/*
-%{_datadir}/rst2pdf/examples/*
 %{_datadir}/rst2pdf/aux/*
 %{_datadir}/rst2pdf/images/*
 %{_datadir}/rst2pdf/styles/doc/*
