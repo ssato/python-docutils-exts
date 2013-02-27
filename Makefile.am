@@ -19,11 +19,6 @@ dist_pkgdata2_DATA = \
 usr/share/rst2odt/styles/ja.odt \
 $(NULL)
 
-pkgdata3dir = /usr/share/rst2pdf/examples
-dist_pkgdata3_DATA = \
-usr/share/rst2pdf/examples/proposal-gps_making_rfps.rst \
-$(NULL)
-
 pkgdata4dir = /usr/share/rst2pdf/images
 dist_pkgdata4_DATA = \
 usr/share/rst2pdf/images/std_presentation_coverpage.png \
