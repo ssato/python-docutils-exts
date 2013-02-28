@@ -16,13 +16,23 @@ usr/bin/rst2pdf-slide \
 usr/bin/gimp_batch_convert_xcf2png.sh \
 $(NULL)
 
-pkgdata1dir = /usr/share/rst2odt/aux
+pkgdata0dir = /etc/python-docutils-exts/rst2odt.d
+dist_pkgdata0_DATA = \
+etc/python-docutils-exts/rst2odt.d/00_default.conf \
+$(NULL)
+
+pkgdata1dir = /etc/python-docutils-exts/rst2pdf.d
 dist_pkgdata1_DATA = \
+etc/python-docutils-exts/rst2pdf.d/00_default.conf \
+$(NULL)
+
+pkgdata2dir = /usr/share/rst2odt/aux
+dist_pkgdata2_DATA = \
 usr/share/rst2odt/aux/Makefile \
 $(NULL)
 
-pkgdata2dir = /usr/share/rst2odt/styles
-dist_pkgdata2_DATA = \
+pkgdata3dir = /usr/share/rst2odt/styles
+dist_pkgdata3_DATA = \
 usr/share/rst2odt/styles/ja.odt \
 $(NULL)
 

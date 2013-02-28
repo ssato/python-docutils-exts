@@ -44,6 +44,8 @@ rm -rf \$RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc README.rst examples
+%config(noreplace) %{_sysconfdir}/%{name}/rst2odt.d/00_default.conf
+%config(noreplace) %{_sysconfdir}/%{name}/rst2pdf.d/00_default.conf
 %{_bindir}/*
 %{_datadir}/rst2odt/aux/*
 %{_datadir}/rst2odt/styles/*
