@@ -8,6 +8,7 @@ dnl TODO: fix autoconf macros used.
 AC_PROG_LN_S
 m4_ifdef([AC_PROG_MKDIR_P],[AC_PROG_MKDIR_P],[AC_SUBST([MKDIR_P],[mkdir -p])])
 m4_ifdef([AC_PROG_SED],[AC_PROG_SED],[AC_SUBST([SED],[sed])])
+m4_ifdef([AC_PROG_LN_S],[AC_PROG_LN_S],[AC_SUBST([LN_S],[ln -s])])
 
 AC_CONFIG_FILES([
 Makefile

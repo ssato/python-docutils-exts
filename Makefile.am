@@ -65,5 +65,10 @@ $(NULL)
 
 MKDIR_P ?= mkdir -p
 SED ?= sed
+LN_S	?= ln -s
+
+
+install-exec-hook:
+	(cd $(DESTDIR)$(bindir) && $(LN_S) rst2pdf-slide rst2pdf-doc)
 
 # vim:sw=4:ts=4:noet:
