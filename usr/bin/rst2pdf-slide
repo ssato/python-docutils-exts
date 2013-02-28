@@ -1,0 +1,101 @@
+#! /bin/bash
+# a simple wrapper for rst2pdf to generate PDF slides.
+#
+set -e
+
+usage () {
+    echo "Usage: $0 [Options] INPUT_RST_FILE [ARGS for rst2pdf ....]"
+}
+
+show_help () {
+    usage
+    cat << EOF
+
+Options:
+  -s STYLE  Specify stylesheet's name or path
+  -o OUTPUT Specify output's path
+
+  -v        Verbose mode
+  -D        Debug mode
+
+  -h        Show this help and exit
+EOF
+}
+
+
+verbose=0
+debug=0
+doc_style_basename=std
+slide_style_basename=std
+
+output=""
+
+self=${0##*/}
+output_type=${self#*-}
+
+# config file to override the above defaults w/ site/personal defaults:
+for f in /etc/python-docutils-exts/rst2pdf.d/*; do source $f; done
+
+if test "x$output_type" = "xslide"; then
+    styledir=/usr/share/rst2pdf/styles/slides
+    style=$styledir/std.style
+else
+    styledir=/usr/share/rst2pdf/styles/doc
+    style=$styledir/std.style
+fi
+
+if test $# -lt 1; then
+    usage
+    exit 1
+fi
+
+while getopts "s:o:vDh" OPT; do
+  case $OPT in
+    s) style="$OPTARG" ;;
+    o) output="-o $OPTARG" ;;
+    v) verbose=1 ;;
+    D) debug=1 ;;
+    h|*) show_help; exit 1;;
+  esac
+done
+shift $(( $OPTIND - 1 ))
+
+# find the stylesheet:
+if test ! -f $style; then
+    newstyle=$styledir/$style
+
+    if test ! -f $newstyle; then
+        newstyle=$styledir/$style.style
+
+        if test ! -f $newstyle; then
+            echo "[Error] style '$newstyle' is not found."
+            exit 1
+        fi
+    fi
+
+    style=$newstyle
+
+    stylename=${style##*/}
+    stylename=${stylename/.style}
+    covertmpl=/usr/share/rst2pdf/templates/${output_type}/${stylename}.coverpage.tmpl
+
+    if test -f ${covertmpl}; then
+        custom_cover_opt="--custom-cover=${covertmpl}"
+        test "x$verbose" = "x1" && echo "[Info] cover template=$covertmpl." || :
+    else
+        custom_cover_opt=""
+    fi
+fi
+
+
+test "x$verbose" = "x1" && echo "[Info] style=$style, output opt=$output." || :
+test "x$debug" = "x1" && echo "[Debug] rest args='$@'" || :
+
+/usr/bin/rst2pdf \
+    --stylesheets=$style \
+    --fit-background-mode=scale \
+    -e inkscape \
+    -b1 \
+    $custom_cover_opt $output $@
+
+# vim:sw=4:ts=4:et:

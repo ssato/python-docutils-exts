@@ -1,0 +1,127 @@
+#! /bin/bash
+# a simple wrapper script for rst2odt to generate ODT documents.
+#
+# Author: Satoru SATOH <ssato@redhat.com>
+# License: MIT
+set -e
+
+# defaults:
+verbose=0
+debug=0
+input=""
+output=""
+self=${0##*/}
+styledir=/usr/share/rst2odt/styles
+stylefile_ext=".odt"
+header="%t%"
+footer="%p% / %P%"
+eopts="--generate-oowriter-toc --strip-comments --create-links"
+dryrun=0
+topdf=0
+
+# config file to override the above defaults w/ site/personal defaults:
+for f in /etc/python-docutils-exts/rst2odt.d/*; do source $f; done
+
+lang=$(locale | sed -nr 's/^LC_MESSAGES="([^"_]+)_.*"$/\1/p')
+test "x$lang" = "x" && style=ja.odt || style=$lang.odt
+
+usage () {
+    echo "Usage: $0 [Options] INPUT_RST [OUTPUT_ODT]"
+}
+
+show_help () {
+    usage
+    cat << EOF
+
+Options:
+  -s STYLE  Stylesheet's name or path [$styledir/$style]
+  -H HEADER Custom ODT header ['$header']
+  -F FOOTER Custom ODT footer ['$footer']
+  -x EOPTS  Extra options for rst2odt [$eopts]
+
+  -P        output PDF from output ODT w/ unoconv also
+
+  -d        Dry run mode
+  -v        Verbose mode
+  -D        Debug mode
+
+  -h        Show this help and exit
+
+See Also:
+
+  * Odt Writer for Docutils:
+    http://docutils.sourceforge.net/docs/user/odt.html
+EOF
+}
+
+
+while getopts "s:H:F:x:PdvDh" OPT; do
+  case $OPT in
+    s) style="$OPTARG" ;;
+    H) header="$OPTARG" ;;
+    F) footer="$OPTARG" ;;
+    x) eopts="$OPTARG" ;;
+    P) topdf=1 ;;
+    d) dryrun=1 ;;
+    v) verbose=1 ;;
+    D) debug=1 ;;
+    h|*) show_help; exit 1;;
+  esac
+done
+shift $(( $OPTIND - 1 ))
+
+if test $# -lt 1; then
+    usage; exit 0
+else
+    input=$1
+    test $# -lt 2 && output=${input%.rst}.odt || output=$2
+fi
+
+# find the stylesheet:
+if test ! -f $style; then
+    newstyle=$styledir/$style
+
+    if test ! -f $newstyle; then
+        newstyle=$styledir/$style.$stylefile_ext
+
+        if test ! -f $newstyle; then
+            echo "[Error] style '$newstyle' is not found."
+            exit 1
+        fi
+    fi
+
+    style=$newstyle
+fi
+
+if test "x$verbose" = "x1"; then
+    echo "[Info] style=$style, output opt=$output."
+    verbose="--verbose"
+else
+    verbose=""
+fi
+if test "x$debug" = "x1"; then
+    echo "[Debug] rest args='$@'"
+    debug="--debug"
+else
+    debug=""
+fi
+
+cmd="rst2odt \
+    --stylesheet=$style \
+    --custom-odt-header=\"$header\" \
+    --custom-odt-footer=\"$footer\" \
+    $verbose $debug $eopts \
+    $input $output"
+
+if test $dryrun -eq 1; then
+    for x in $cmd; do echo $x; done
+else
+    eval $cmd
+fi
+
+if test $topdf -eq 1; then
+    pdf_output=${output%.odt}.pdf
+    unoconv -f pdf -o $pdf_output $output
+fi
+
+# vim:sw=4:ts=4:et:
