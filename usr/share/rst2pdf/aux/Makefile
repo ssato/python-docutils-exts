@@ -6,7 +6,6 @@ endif
 
 slide_PDF		?= $(NAME).pdf
 
-THEME ?= std
 rst2pdf_OPTIONS	?=
 
 # NOTE: If the file name '$(slide_TOC_SOURCE)' is defined, that file becomes an
@@ -48,7 +47,7 @@ include Makefile.depends
 
 pdf: $(slide_PDF)
 $(slide_PDF): $(slide_SOURCES) $(image_PNG_DATA) $(include_DATA)
-	rst2pdf-slide -s $(THEME) $(rst2pdf_OPTIONS) -o $@ $<
+	rst2pdf-slide $(rst2pdf_OPTIONS) -o $@ $<
 
 clean:
 	-rm -f $(slide_ODT) Makefile.depends
