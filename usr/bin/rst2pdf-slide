@@ -38,10 +38,10 @@ for f in /etc/python-docutils-exts/rst2pdf.d/*; do source $f; done
 
 if test "x$output_type" = "xslide"; then
     styledir=/usr/share/rst2pdf/styles/slides
-    style=$styledir/std.style
+    style=$styledir/${slide_style_basename}.style
 else
     styledir=/usr/share/rst2pdf/styles/doc
-    style=$styledir/std.style
+    style=$styledir/${doc_style_basename}.style
 fi
 
 if test $# -lt 1; then
