@@ -22,8 +22,8 @@ topdf=0
 # config file to override the above defaults w/ site/personal defaults:
 for f in /etc/python-docutils-exts/rst2odt.d/*; do source $f; done
 
-lang=$(locale | sed -nr 's/^LC_MESSAGES="([^"_]+)_.*"$/\1/p')
-test "x$lang" = "x" && style=ja.odt || style=$lang.odt
+lang=$(locale | sed -nr 's/^LC_MESSAGES="([^"_.]+)_.*"$/\1/p')
+test "x$lang" = "x" && style=ja${stylefile_ext} || style=${lang}${stylefile_ext}
 
 usage () {
     echo "Usage: $0 [Options] INPUT_RST [OUTPUT_ODT]"
@@ -82,7 +82,7 @@ if test ! -f $style; then
     newstyle=$styledir/$style
 
     if test ! -f $newstyle; then
-        newstyle=$styledir/$style.$stylefile_ext
+        newstyle=$styledir/$style
 
         if test ! -f $newstyle; then
             echo "[Error] style '$newstyle' is not found."
