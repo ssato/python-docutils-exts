@@ -57,5 +57,9 @@ rm -rf \$RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 28 2013 Satoru SATOH <ssato@redhat.com> - 0.0.2-1
+- fix a bug that adding an extra '.odt' (style file suffix) to style file name
+  in rst2odt-wrapper
+
 * Thu Feb 28 2013 Satoru SATOH <ssato@redhat.com> - 0.0.1-1
 - Forked from python-docutils-data-nrt and restructured dist
