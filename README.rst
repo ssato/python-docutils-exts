@@ -63,21 +63,43 @@ Likewise. I recommend to use /usr/share/rst2pdf/aux/Makefile instead of direct
 invocation of it.
 
 How to build and install
-===========================
+=========================
 
 $ autoreconf -vfi && ./configure && make srpm
 $ mock [-r <your target fedora/rhel dist>] <built source rpm>
 $ sudo yum install /var/lib/mock/<your target fedora/rhel dist>/result/<built binary noarch rpm>
 
 How to customize styles
-===========================
+=========================
+
+rst2pdf
+---------
+
+Copy stylesheet files under /usr/share/rst2pdf/styles/\* to somewhere and
+customize it, or create your version based on the default version rst2pdf dumps
+such like the followings:
+
+.. code-block:: console
+
+   rst2pdf --print-stylesheet > custom.style
+
+And if you're using /usr/share/rst2pdf/aux/Makefile by including it in your
+makefile, edit your makefile to add the line like:
+
+.. code-block:: make
+
+   rst2pdf_OPTIONS = -s /path/to/your/custom/stylesheet.style
+
+SEE ALSO: http://rst2pdf.ralsina.com.ar/handbook.html#styles
+
+rst2odt
+---------
 
 Customize styles/styles.xml; replace fonts optimized for your needs, for example.
 
 Also you can make a sample ODT file and unzipped/replaced my ones w/ it.
 
 SEE ALSO: http://cutter.rexx.com/~dkuhlman/odt.html
-
 
 License
 =========
