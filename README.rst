@@ -65,9 +65,11 @@ invocation of it.
 How to build and install
 =========================
 
-$ autoreconf -vfi && ./configure && make srpm
-$ mock [-r <your target fedora/rhel dist>] <built source rpm>
-$ sudo yum install /var/lib/mock/<your target fedora/rhel dist>/result/<built binary noarch rpm>
+::
+
+  $ autoreconf -vfi && ./configure && make srpm
+  $ mock [-r <your target fedora/rhel dist>] <built source rpm>
+  $ sudo yum install /var/lib/mock/<your target fedora/rhel dist>/result/<built binary noarch rpm>
 
 How to customize styles
 =========================
