@@ -1,0 +1,24 @@
+imagesdir	?= images
+image_SVG_DATA	?= $(wildcard $(imagesdir)/*.svg) $(wildcard $(imagesdir)/svg/*.svg) $(wildcard $(imagesdir)/common/svg/*.svg)
+image_XCF_DATA	?= $(wildcard $(imagesdir)/*.xcf) $(wildcard $(imagesdir)/xcf/*.xcf) $(wildcard $(imagesdir)/common/xcf/*.xcf)
+image_PNG_DATA	?= $(wildcard $(imagesdir)/*.png) $(image_SVG_DATA:.svg=.png) $(image_XCF_DATA:.xcf=.png)
+image_PNG_OPT_LEVEL ?= 7
+
+# svg -> png
+optpng = optipng -o$(image_PNG_OPT_LEVEL) -fix -force $@.tmp && mv $@.tmp $@
+svg2png = inkscape -e $@.tmp $< && $(optpng)
+xcf2png = gimp_batch_convert_xcf2png.sh $< $@ && mv -f $@ $@.tmp && $(optpng)
+
+Makefile.depends: $(image_SVG_DATA) $(image_XCF_DATA)
+	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp
+	for f in $(image_SVG_DATA); do \
+		out=`echo $$f | sed -e 's/\.svg/.png/g'`; \
+		echo -ne "$$out: $$f\n\t\$$(svg2png)\n\n" >> $@.tmp; \
+	done
+	for f in $(image_XCF_DATA); do \
+		out=`echo $$f | sed -e 's/\.xcf/.png/g'`; \
+		echo -ne "$$out: $$f\n\t\$$(xcf2png)\n\n" >> $@.tmp; \
+	done
+	mv $@.tmp $@
+
+include Makefile.depends

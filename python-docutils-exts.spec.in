@@ -47,6 +47,7 @@ rm -rf \$RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/%{name}/rst2odt.d/00_default.conf
 %config(noreplace) %{_sysconfdir}/%{name}/rst2pdf.d/00_default.conf
 %{_bindir}/*
+%{_datadir}/docutils-exts-common/*
 %{_datadir}/rst2odt/aux/*
 %{_datadir}/rst2odt/styles/*
 %{_datadir}/rst2pdf/aux/*
@@ -57,6 +58,10 @@ rm -rf \$RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 16 2013 Satoru SATOH <ssato@redhat.com> - 0.0.3-1
+- Added common (library) Makefile to be included in makefiles for rst2odt and
+  rst2pdf wrapper scripts
+
 * Thu Feb 28 2013 Satoru SATOH <ssato@redhat.com> - 0.0.2-1
 - fix a bug that adding an extra '.odt' (style file suffix) to style file name
   in rst2odt-wrapper

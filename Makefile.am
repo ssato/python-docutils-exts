@@ -62,6 +62,11 @@ dist_pkgdata8_DATA = \
 usr/share/rst2pdf/aux/Makefile \
 $(NULL)
 
+pkgdata9dir = /usr/share/docutils-exts-common
+dist_pkgdata9_DATA = \
+usr/share/docutils-exts-common/Makefile.common \
+$(NULL)
+
 
 MKDIR_P ?= mkdir -p
 SED ?= sed
