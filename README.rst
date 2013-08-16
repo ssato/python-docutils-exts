@@ -48,7 +48,7 @@ SEE ALSO:
   * sources: \*.rst, images/\*.png, logs/\*.txt, data/\*.txt
 
 rst2odt-wrapper
-------------------
+-----------------
 
 Usage:
 
@@ -57,7 +57,7 @@ Usage:
   /usr/bin/rst2odt-wrapper [Options] INPUT_RST [OUTPUT_ODT]
 
 rst2pdf-slide
-------------------
+---------------
 
 Likewise. I recommend to use /usr/share/rst2pdf/aux/Makefile instead of direct
 invocation of it.
