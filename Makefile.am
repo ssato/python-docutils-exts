@@ -14,6 +14,7 @@ dist_bin_SCRIPTS = \
 usr/bin/rst2odt-wrapper \
 usr/bin/rst2pdf-slide \
 usr/bin/gimp_batch_convert_xcf2png.sh \
+usr/bin/docutils-exts-bootstrap \
 $(NULL)
 
 pkgdata0dir = /etc/python-docutils-exts/rst2odt.d
@@ -66,6 +67,15 @@ pkgdata9dir = /usr/share/docutils-exts-common
 dist_pkgdata9_DATA = \
 usr/share/docutils-exts-common/Makefile.common \
 $(NULL)
+
+pkgdata10dir = /usr/share/docutils-exts-common/templates
+dist_pkgdata10_DATA = usr/share/docutils-exts-common/templates/Makefile.j2
+
+pkgdata11dir = /usr/share/rst2odt/templates
+dist_pkgdata11_DATA = usr/share/rst2odt/templates/00_index.rst.j2
+
+pkgdata12dir = /usr/share/rst2pdf/templates
+dist_pkgdata12_DATA = usr/share/rst2pdf/templates/00_index.rst.j2
 
 
 MKDIR_P ?= mkdir -p
