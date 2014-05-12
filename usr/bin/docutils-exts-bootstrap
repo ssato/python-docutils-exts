@@ -1,0 +1,104 @@
+#
+# Author: Satoru SATOH <ssato redhat.com>
+# License: MIT
+#
+import anyconfig as A
+import jinja2_cli.render as JR
+import jinja2_cli.utils as JU
+
+import datetime
+import glob
+import optparse
+import os.path
+import os
+import sys
+
+
+# SEE configure.ac:
+VERSION = "0.0.4"
+
+USAGE = "%prog [Options...] DOC_NAME"
+DOC_TYPES = (DOC_DOC, DOC_SLIDES) = ("doc", "slides")
+DEFAULTS = dict(type=DOC_DOC, tpaths=[], ctx=None, workdir=None)
+
+PKG_COMMON_TMPLDIR = "/usr/share/docutils-exts-common/templates"
+PKG_BUILDER_TMPLDIR_FMT = "/usr/share/%s/templates"
+
+
+def sglob(files_pattern):
+    return sorted(glob.glob(files_pattern))
+
+
+def option_parser(usage=USAGE, defaults=DEFAULTS):
+    """
+    Make up an option and arguments parser.
+
+    :param defaults: Default option values
+    :param usage: Usage text
+    """
+    pkg_tpaths = (PKG_BUILDER_TMPLDIR_FMT % "<builder>", PKG_COMMON_TMPLDIR)
+
+    parser = optparse.OptionParser(usage, version="%%prog %s" % VERSION)
+    parser.set_defaults(**defaults)
+    parser.add_option("-t", "--type", choices=DOC_TYPES,
+                      help="Document type: %s or %s [%%default]" % DOC_TYPES)
+    parser.add_option("-T", "--tpaths", action="append",
+                      help="Template search paths [., %s, %s]" % pkg_tpaths)
+    parser.add_option("-C", "--contexts", action="append",
+                      help="Specify file path and optionally its filetype, to "
+                           "provides context data to instantiate templates. "
+                           " The option argument's format is "
+                           " [type:]<file_name_or_path_or_glob_pattern>"
+                           " ex. -C json:common.json -C ./specific.yaml -C "
+                           "yaml:test.dat, -C yaml:/etc/foo.d/*.conf")
+    return parser
+
+
+def main(argv=sys.argv):
+    """
+    :param argv: Argument list to parse [sys.argv]
+    """
+    parser = option_parser()
+    (options, args) = parser.parse_args(argv[1:])
+
+    if not args:
+        parser.print_usage()
+        sys.exit(-1)
+
+    doc_name = args[0]
+
+    if not options.tpaths:
+        options.tpaths = [os.curdir]
+
+    if not options.workdir:
+        options.workdir = os.path.join(os.curdir, "workdir-" + options.type)
+
+    ctx = JU.parse_and_load_contexts(options.ctx) if options.ctx else {}
+    ctx["doc_name"] = doc_name
+    ctx["doc_revision"] = datetime.datetime.now().strftime("%Y%m%d.1")
+
+    if options.type == DOC_DOC:
+        builder = ctx["doc_builder"] = "rst2odt"
+        options.tpaths.extend([PKG_BUILDER_TMPLDIR_FMT % builder,
+                               PKG_COMMON_TMPLDIR])
+    else:
+        builder = ctx["doc_builder"] = "rst2pdf"
+        options.tpaths.extend([PKG_BUILDER_TMPLDIR_FMT % builder,
+                               PKG_COMMON_TMPLDIR])
+
+    if not os.path.exists(options.workdir):
+        os.makedirs(options.workdir)
+
+    # Compile templates (.j2) and ignore others.
+    srcs = JU.concat(sglob(os.path.join(d, "*.j2")) for d in options.tpaths)
+    for src in srcs:
+        outpath = os.path.join(options.workdir,
+                               os.path.basename(tmpl).rsplit(".j2", 1)[0])
+        if not os.path.exists(outpath):  # Don't overwrite previous built one.
+            JR.renderto(tmpl, ctx, options.tpaths, outpath)
+
+
+if __name__ == '__main__':
+    main(sys.argv)
+
+# vim:sw=4:ts=4:et:
