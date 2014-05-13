@@ -70,7 +70,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rst2*/templates/*.j2
 
 %changelog
-* Mon May 12 2014 Satoru SATOH <ssato@redhat.com> - 0.0.4-1
+* Tue May 13 2014 Satoru SATOH <ssato@redhat.com> - 0.0.3.99-1
 - Added bootstrap tool and templates and make it included in a sub package
 
 * Fri Aug 16 2013 Satoru SATOH <ssato@redhat.com> - 0.0.3-1
