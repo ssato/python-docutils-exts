@@ -96,9 +96,9 @@ def main(argv=sys.argv):
     srcs = JU.concat(sglob(os.path.join(d, "*.j2")) for d in options.tpaths)
     for src in srcs:
         outpath = os.path.join(options.workdir,
-                               os.path.basename(tmpl).rsplit(".j2", 1)[0])
+                               os.path.basename(src).rsplit(".j2", 1)[0])
         if not os.path.exists(outpath):  # Don't overwrite previous built one.
-            JR.renderto(tmpl, ctx, options.tpaths, outpath)
+            JR.renderto(src, ctx, options.tpaths, outpath)
 
 
 if __name__ == '__main__':
