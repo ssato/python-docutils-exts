@@ -13,7 +13,6 @@ import os.path
 import os
 import sys
 
-
 # SEE configure.ac:
 VERSION = "0.0.4"
 
@@ -23,6 +22,14 @@ DEFAULTS = dict(type=DOC_DOC, tpaths=[], ctx=None, workdir=None)
 
 PKG_COMMON_TMPLDIR = "/usr/share/docutils-exts-common/templates"
 PKG_BUILDER_TMPLDIR_FMT = "/usr/share/%s/templates"
+
+# see also: DOC_TYPES
+BUILDERS_MAP = dict(doc=("rst2odt",
+                         [PKG_BUILDER_TMPLDIR_FMT % "rst2odt",
+                          PKG_COMMON_TMPLDIR]),
+                    slides=("rst2pdf",
+                            [PKG_BUILDER_TMPLDIR_FMT % "rst2pdf",
+                             PKG_COMMON_TMPLDIR]))
 
 
 def sglob(files_pattern):
@@ -77,14 +84,9 @@ def main(argv=sys.argv):
     ctx["doc_name"] = doc_name
     ctx["doc_revision"] = datetime.datetime.now().strftime("%Y%m%d.1")
 
-    if options.type == DOC_DOC:
-        builder = ctx["doc_builder"] = "rst2odt"
-        options.tpaths.extend([PKG_BUILDER_TMPLDIR_FMT % builder,
-                               PKG_COMMON_TMPLDIR])
-    else:
-        builder = ctx["doc_builder"] = "rst2pdf"
-        options.tpaths.extend([PKG_BUILDER_TMPLDIR_FMT % builder,
-                               PKG_COMMON_TMPLDIR])
+    (builder, tpaths_add) = BUILDERS_MAP[options.type]
+    ctx["doc_builder"] = builder
+    options.tpaths.extend(tpaths_add)
 
     if not os.path.exists(options.workdir):
         os.makedirs(options.workdir)
