@@ -9,32 +9,105 @@ import jinja2_cli.utils as JU
 
 import datetime
 import glob
+import logging
 import optparse
 import os.path
 import os
+import random
 import sys
+
 
 # SEE configure.ac:
 VERSION = "0.0.4"
 
-USAGE = "%prog [Options...] DOC_NAME"
-DOC_TYPES = (DOC_DOC, DOC_SLIDES) = ("doc", "slides")
-DEFAULTS = dict(type=DOC_DOC, tpaths=[], ctx=None, workdir=None)
-
-PKG_COMMON_TMPLDIR = "/usr/share/docutils-exts-common/templates"
-PKG_BUILDER_TMPLDIR_FMT = "/usr/share/%s/templates"
-
-# see also: DOC_TYPES
-BUILDERS_MAP = dict(doc=("rst2odt",
-                         [PKG_BUILDER_TMPLDIR_FMT % "rst2odt",
-                          PKG_COMMON_TMPLDIR]),
-                    slides=("rst2pdf",
-                            [PKG_BUILDER_TMPLDIR_FMT % "rst2pdf",
-                             PKG_COMMON_TMPLDIR]))
+LOG = logging.getLogger("docutils-exts-bootstrap")
+TMPL_EXT = ".j2"
 
 
 def sglob(files_pattern):
     return sorted(glob.glob(files_pattern))
+
+
+def _to_relpath(path, destdir):
+    """
+    >>> _to_relpath("/a/b/c/d/e", "/a/b/c")
+    'd/e'
+    >>> _to_relpath("/a/b/c/d/e", "/a/b/c/")
+    'd/e'
+    >>> _to_relpath("/a/b/c/d/e", "/a/b/d")
+    None
+    """
+    if not path.startswith(destdir):
+        LOG.warn("The {} does not start with {}".format(path, destdir))
+        return None
+
+    return path.replace(destdir if destdir.endswith('/') else destdir + '/')
+
+
+def _tmpl_to_outpath(path, destdir, ext=TMPL_EXT):
+    """
+    >>> _tmpl_to_outpath('/a/b/c/d/e.rst.j2', '/a/b/c')
+    'd/e.rst'
+    """
+    relpath = _to_relpath(path, destdir)
+    if relpath is None:
+        return None
+
+    (fn, fext) = os.path.splitext(relpath)
+
+    if fext != ext:
+        LOG.warn("The {} does not match with expected extension, "
+                 "{}".format(fext, ext))
+        return None
+
+    return fn
+
+
+def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT):
+    """
+    Compile given template file ``tmpl_path`` with given context ``ctx`` and
+    dump into the file under ``workdir`` with template file path relative to
+    ``destdir`` kept.
+
+    :param tmpl_path: Template file path
+    :param destdir: Template top dir to strip from ``tmpl_path``
+    :param workdir: Working dir to save compiled results
+    :param ctx: Context dictionary to instantiate given template
+    """
+    tmpl_path = os.path.abspath(tmpl_path)
+    outpath = os.path.join(workdir, _tmpl_to_outpath(tmpl_path, destdir, ext))
+    tpaths = [os.path.dirname(tmpl_path), os.curdir]
+
+    LOG.info("Compile the template {} to {}".format(tmpl_path, outpath))
+    JR.renderto(_to_relpath(tmpl_path, destdir), ctx, tpaths, outpath)
+
+
+def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT):
+    if path.endswith(ext):
+        _compile_template(path, destdir, workdir, ctx, ext)
+    else:
+        relpath = _to_relpath(path, destdir)
+        reldir = os.path.dirname(relpath)
+
+        if not os.path.exists(reldir):
+            os.makedirs(reldir)
+
+        LOG.info("Make a symlink from {} to {} (relpath)".format(path, relpath))
+        os.symlink(path, os.path.join(workdir, relpath))
+
+
+def setup_files(destdir, workdir, ctx, ext=TMPL_EXT):
+    """
+    """
+    for dirpath, _dirnames, filenames in os.walk(destdir):
+        for fn in filenames:
+            _setup_file(os.path.join(dirpath, fn), destdir, workdir, ctx, ext)
+
+
+USAGE = "%prog [Options...] DOC_NAME TEMPLATES_DIR"
+TODAY = datetime.datetime.now().strftime("%Y%m%d")
+DEFAULTS = dict(ctx=None,
+                workdir="/tmp/{}.{}".format(TODAY, random.randint(1, 10)))
 
 
 def option_parser(usage=USAGE, defaults=DEFAULTS):
@@ -44,14 +117,9 @@ def option_parser(usage=USAGE, defaults=DEFAULTS):
     :param defaults: Default option values
     :param usage: Usage text
     """
-    pkg_tpaths = (PKG_BUILDER_TMPLDIR_FMT % "<builder>", PKG_COMMON_TMPLDIR)
-
     parser = optparse.OptionParser(usage, version="%%prog %s" % VERSION)
     parser.set_defaults(**defaults)
-    parser.add_option("-t", "--type", choices=DOC_TYPES,
-                      help="Document type: %s or %s [%%default]" % DOC_TYPES)
-    parser.add_option("-T", "--tpaths", action="append",
-                      help="Template search paths [., %s, %s]" % pkg_tpaths)
+    parser.add_option("-w", "--workdir", help="Working dir [%default]")
     parser.add_option("-C", "--contexts", action="append",
                       help="Specify file path and optionally its filetype, to "
                            "provides context data to instantiate templates. "
@@ -69,11 +137,12 @@ def main(argv=sys.argv):
     parser = option_parser()
     (options, args) = parser.parse_args(argv[1:])
 
-    if not args:
+    if not args or len(args) < 2:
         parser.print_usage()
         sys.exit(-1)
 
     doc_name = args[0]
+    tmpldir = args[1]
 
     if not options.tpaths:
         options.tpaths = [os.curdir]
@@ -85,20 +154,10 @@ def main(argv=sys.argv):
     ctx["doc_name"] = doc_name
     ctx["doc_revision"] = datetime.datetime.now().strftime("%Y%m%d.1")
 
-    (builder, tpaths_add) = BUILDERS_MAP[options.type]
-    ctx["doc_builder"] = builder
-    options.tpaths.extend(tpaths_add)
-
     if not os.path.exists(options.workdir):
         os.makedirs(options.workdir)
 
-    # Compile templates (.j2) and ignore others.
-    srcs = JU.concat(sglob(os.path.join(d, "*.j2")) for d in options.tpaths)
-    for src in srcs:
-        outpath = os.path.join(options.workdir,
-                               os.path.basename(src).rsplit(".j2", 1)[0])
-        if not os.path.exists(outpath):  # Don't overwrite previous built one.
-            JR.renderto(src, ctx, options.tpaths, outpath)
+    setup_files(tmpldir, options.workdir, ctx, TMPL_EXT)
 
 
 if __name__ == '__main__':
