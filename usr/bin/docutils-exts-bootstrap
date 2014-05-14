@@ -82,7 +82,7 @@ def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT):
     outpath = os.path.join(workdir, _tmpl_to_outpath(tmpl_path, destdir, ext))
     tpaths = [os.path.dirname(tmpl_path), os.curdir]
 
-    LOG.info("Compile the template {} to {}".format(tmpl_path, outpath))
+    LOG.debug("Compile the template {} to {}".format(tmpl_path, outpath))
     JR.renderto(_to_relpath(tmpl_path, destdir), ctx, tpaths, outpath)
 
 
@@ -94,12 +94,16 @@ def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT):
         reldir = os.path.dirname(relpath)
 
         dst = os.path.join(workdir, relpath)
-        dstdir = os.path.dirname(dst)
 
+        if os.path.exists(dst):
+            LOG.info("{} already exists. Skip it...".format(dst))
+            return
+
+        dstdir = os.path.dirname(dst)
         if not os.path.exists(dstdir):
             os.makedirs(dstdir)
 
-        LOG.info("Make a symlink from {} to {} (relpath)".format(path, relpath))
+        LOG.debug("Make a symlink from {} to {} (relpath)".format(path, relpath))
         os.symlink(path, dst)
 
 
