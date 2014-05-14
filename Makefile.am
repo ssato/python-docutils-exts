@@ -68,16 +68,13 @@ pkgdata10dir = /usr/share/docutils-exts-common/templates
 dist_pkgdata10_DATA = usr/share/docutils-exts-common/templates/Makefile.j2
 
 pkgdata11dir = /usr/share/rst2odt/templates/default
-dist_pkgdata11_DATA = usr/share/rst2odt/templates/default/00_index.rst.j2
+dist_pkgdata11_DATA = $(wildcard usr/share/rst2odt/templates/default/*)
 
 pkgdata12dir = /usr/share/rst2pdf/templates/default
-dist_pkgdata12_DATA = usr/share/rst2pdf/templates/default/00_index.rst.j2
+dist_pkgdata12_DATA = $(wildcard usr/share/rst2pdf/templates/default/*)
 
-
-MKDIR_P ?= mkdir -p
-SED ?= sed
+MKDIR_P	?= mkdir -p
 LN_S	?= ln -s
-
 
 install-exec-hook:
 	(cd $(DESTDIR)$(bindir) && $(LN_S) rst2pdf-slide rst2pdf-doc)
