@@ -93,11 +93,14 @@ def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT):
         relpath = _to_relpath(path, destdir)
         reldir = os.path.dirname(relpath)
 
-        if not os.path.exists(reldir):
-            os.makedirs(reldir)
+        dst = os.path.join(workdir, relpath)
+        dstdir = os.path.dirname(dst)
+
+        if not os.path.exists(dstdir):
+            os.makedirs(dstdir)
 
         LOG.info("Make a symlink from {} to {} (relpath)".format(path, relpath))
-        os.symlink(path, os.path.join(workdir, relpath))
+        os.symlink(path, dst)
 
 
 def setup_files(destdir, workdir, ctx, ext=TMPL_EXT):
