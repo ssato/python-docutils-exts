@@ -59,23 +59,19 @@ usr/share/rst2pdf/templates/slide/std.coverpage.tmpl \
 $(NULL)
 
 pkgdata8dir = /usr/share/rst2pdf/aux
-dist_pkgdata8_DATA = \
-usr/share/rst2pdf/aux/Makefile \
-$(NULL)
+dist_pkgdata8_DATA = $(wildcard usr/share/rst2pdf/aux/*)
 
 pkgdata9dir = /usr/share/docutils-exts-common
-dist_pkgdata9_DATA = \
-usr/share/docutils-exts-common/Makefile.common \
-$(NULL)
+dist_pkgdata9_DATA = usr/share/docutils-exts-common/Makefile.common
 
 pkgdata10dir = /usr/share/docutils-exts-common/templates
 dist_pkgdata10_DATA = usr/share/docutils-exts-common/templates/Makefile.j2
 
-pkgdata11dir = /usr/share/rst2odt/templates
-dist_pkgdata11_DATA = usr/share/rst2odt/templates/00_index.rst.j2
+pkgdata11dir = /usr/share/rst2odt/templates/default
+dist_pkgdata11_DATA = usr/share/rst2odt/templates/default/00_index.rst.j2
 
-pkgdata12dir = /usr/share/rst2pdf/templates
-dist_pkgdata12_DATA = usr/share/rst2pdf/templates/00_index.rst.j2
+pkgdata12dir = /usr/share/rst2pdf/templates/default
+dist_pkgdata12_DATA = usr/share/rst2pdf/templates/default/00_index.rst.j2
 
 
 MKDIR_P ?= mkdir -p
