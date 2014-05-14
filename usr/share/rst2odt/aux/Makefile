@@ -22,6 +22,7 @@ txt_DATA	?= $(foreach dir,$(doc_DATADIRS),$(wildcard $(dir)/*.txt $(dir)/*.rst))
 doc_SOURCES	?= $(doc_TOC_SOURCE) $(sort $(wildcard *.rst))
 
 include /usr/share/docutils-exts-common/Makefile.common
+-include /usr/share/rst2odt/Makefile.bootstrap
 
 # rst -> odt
 ifeq ($(STYLE),NULL)

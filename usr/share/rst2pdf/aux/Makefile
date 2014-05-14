@@ -17,6 +17,7 @@ include_DATA	?= $(wildcard include/*.txt) $(wildcard include/common/*.txt)
 slide_SOURCES	?= $(slide_TOC_SOURCE) $(sort $(wildcard *.rst))
 
 include /usr/share/docutils-exts-common/Makefile.common
+-include /usr/share/rst2pdf/Makefile.bootstrap
 
 all: $(slide_PDF)
 
