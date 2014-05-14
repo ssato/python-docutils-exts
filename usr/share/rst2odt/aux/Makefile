@@ -32,6 +32,8 @@ _rst2odt = rst2odt-wrapper -v -s $(STYLE) $(rst2odt_OPTIONS)
 endif
 
 
+all: pdf
+
 $(doc_ODT): $(doc_SOURCES) $(image_PNG_DATA) $(log_DATA)
 	$(_rst2odt) $< $@
 
