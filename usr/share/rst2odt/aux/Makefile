@@ -21,6 +21,9 @@ doc_DATADIRS	?= logs data common common/*
 txt_DATA	?= $(foreach dir,$(doc_DATADIRS),$(wildcard $(dir)/*.txt $(dir)/*.rst))
 doc_SOURCES	?= $(doc_TOC_SOURCE) $(sort $(wildcard *.rst))
 
+
+all: pdf
+
 include /usr/share/docutils-exts-common/Makefile.common
 -include /usr/share/rst2odt/Makefile.bootstrap
 
@@ -30,9 +33,6 @@ _rst2odt = rst2odt-wrapper -v $(rst2odt_OPTIONS)
 else
 _rst2odt = rst2odt-wrapper -v -s $(STYLE) $(rst2odt_OPTIONS)
 endif
-
-
-all: pdf
 
 $(doc_ODT): $(doc_SOURCES) $(image_PNG_DATA) $(log_DATA)
 	$(_rst2odt) $< $@
