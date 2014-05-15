@@ -110,7 +110,13 @@ def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT):
 def setup_files(destdir, workdir, ctx, ext=TMPL_EXT):
     """
     """
-    for dirpath, _dirnames, filenames in os.walk(destdir):
+    for dirpath, dirnames, filenames in os.walk(destdir):
+        for dn in dirnames:
+            d = os.path.join(workdir, _to_relpath(os.path.join(dirpath, dn),
+                                                  destdir))
+            if not os.path.exists(d):
+                os.makedirs(d)
+
         for fn in filenames:
             _setup_file(os.path.join(dirpath, fn), destdir, workdir, ctx, ext)
 
