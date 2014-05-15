@@ -85,7 +85,7 @@ def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT,
 
     if os.path.exists(outpath):
         if force:
-            os.rename(dst, dst + '~')
+            os.rename(outpath, outpath + '~')
         else:
             LOG.info("{} already exists. Skip it...".format(outpath))
             return
