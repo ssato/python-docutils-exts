@@ -1,4 +1,4 @@
-AC_INIT([python-docutils-exts],[0.0.3.99])
+AC_INIT([python-docutils-exts],[0.0.4])
 AM_INIT_AUTOMAKE([no-dist-gzip dist-xz foreign subdir-objects tar-pax])
 
 dnl http://www.flameeyes.eu/autotools-mythbuster/automake/silent.html
