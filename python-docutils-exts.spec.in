@@ -70,9 +70,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rst2*/templates/default/*
 
 %changelog
-* Wed May 14 2014 Satoru SATOH <ssato@redhat.com> - 0.0.3.99-1
+* Fri May 23 2014 Satoru SATOH <ssato@redhat.com> - 0.0.3.99-1
 - Added bootstrap tool and default template files and make them included in
   a sub package
+- Cleanups around AC_PROG_{SED,MKDIR_P,LN_S} in configure.ac
+- Sort out makefiles for rst2{odt,pdf}-wrapper; exract and move common part
+  into usr/share/docutils-exts-common/Makefile.common, etc.
 
 * Fri Aug 16 2013 Satoru SATOH <ssato@redhat.com> - 0.0.3-1
 - Added common (library) Makefile to be included in makefiles for rst2odt and
