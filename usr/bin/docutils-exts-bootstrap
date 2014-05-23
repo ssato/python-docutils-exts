@@ -3,6 +3,9 @@
 # Author: Satoru SATOH <ssato redhat.com>
 # License: MIT
 #
+"""
+Bootstrap files to process rst2{odt,pdf}-wrapper.
+"""
 import anyconfig as A
 import jinja2_cli.render as JR
 
@@ -28,6 +31,9 @@ TMPL_EXT = ".j2"
 
 
 def sglob(files_pattern):
+    """
+    sorted + glob.glob.
+    """
     return sorted(glob.glob(files_pattern))
 
 
@@ -95,12 +101,13 @@ def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT,
 
 
 def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT, force=False):
+    """
+    Setup a file.
+    """
     if path.endswith(ext):
         _compile_template(path, destdir, workdir, ctx, ext, force)
     else:
         relpath = _to_relpath(path, destdir)
-        reldir = os.path.dirname(relpath)
-
         dst = os.path.join(workdir, relpath)
 
         if os.path.exists(dst):
@@ -114,12 +121,14 @@ def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT, force=False):
         if not os.path.exists(dstdir):
             os.makedirs(dstdir)
 
-        LOG.debug("Make a symlink from {} to {} (relpath)".format(path, relpath))
+        LOG.debug("Make a symlink from {} to {} (relpath)".format(path,
+                                                                  relpath))
         os.symlink(path, dst)
 
 
 def setup_files(destdir, workdir, ctx, ext=TMPL_EXT, force=False):
     """
+    Setup files.
     """
     for dirpath, dirnames, filenames in os.walk(destdir):
         for dn in dirnames:
