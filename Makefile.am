@@ -10,53 +10,31 @@ $(NULL)
 abs_srcdir  ?= .
 include $(abs_srcdir)/rpm.mk
 
-dist_bin_SCRIPTS = \
-usr/bin/rst2odt-wrapper \
-usr/bin/rst2pdf-slide \
-usr/bin/gimp_batch_convert_xcf2png.sh \
-usr/bin/docutils-exts-bootstrap \
-$(NULL)
+dist_bin_SCRIPTS = $(wildcard usr/bin/*)
 
 pkgdata0dir = /etc/python-docutils-exts/rst2odt.d
-dist_pkgdata0_DATA = \
-etc/python-docutils-exts/rst2odt.d/00_default.conf \
-$(NULL)
+dist_pkgdata0_DATA = $(wildcard etc/python-docutils-exts/rst2odt.d/*)
 
 pkgdata1dir = /etc/python-docutils-exts/rst2pdf.d
-dist_pkgdata1_DATA = \
-etc/python-docutils-exts/rst2pdf.d/00_default.conf \
-$(NULL)
+dist_pkgdata1_DATA = $(wildcard etc/python-docutils-exts/rst2pdf.d/*)
 
 pkgdata2dir = /usr/share/rst2odt/aux
-dist_pkgdata2_DATA = \
-usr/share/rst2odt/aux/Makefile \
-$(NULL)
+dist_pkgdata2_DATA = $(wildcard usr/share/rst2odt/aux/*)
 
 pkgdata3dir = /usr/share/rst2odt/styles
-dist_pkgdata3_DATA = \
-usr/share/rst2odt/styles/ja.odt \
-$(NULL)
+dist_pkgdata3_DATA = $(wildcard usr/share/rst2odt/styles/*)
 
 pkgdata4dir = /usr/share/rst2pdf/images
-dist_pkgdata4_DATA = \
-usr/share/rst2pdf/images/std_presentation_coverpage.png \
-usr/share/rst2pdf/images/std_presentation_background.png \
-$(NULL)
+dist_pkgdata4_DATA = $(wildcard usr/share/rst2pdf/images/*)
 
 pkgdata5dir = /usr/share/rst2pdf/styles/doc
-dist_pkgdata5_DATA = \
-usr/share/rst2pdf/styles/doc/std.style \
-$(NULL)
+dist_pkgdata5_DATA = $(wildcard usr/share/rst2pdf/styles/doc/*)
 
 pkgdata6dir = /usr/share/rst2pdf/styles/slides
-dist_pkgdata6_DATA = \
-usr/share/rst2pdf/styles/slides/std.style \
-$(NULL)
+dist_pkgdata6_DATA = $(wildcard usr/share/rst2pdf/styles/slides/*)
 
 pkgdata7dir = /usr/share/rst2pdf/templates/slide
-dist_pkgdata7_DATA = \
-usr/share/rst2pdf/templates/slide/std.coverpage.tmpl \
-$(NULL)
+dist_pkgdata7_DATA = $(wildcard usr/share/rst2pdf/templates/slide/*)
 
 pkgdata8dir = /usr/share/rst2pdf/aux
 dist_pkgdata8_DATA = $(wildcard usr/share/rst2pdf/aux/*)
