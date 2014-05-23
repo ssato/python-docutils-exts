@@ -34,7 +34,7 @@ else
 _rst2odt = rst2odt-wrapper -v -s $(STYLE) $(rst2odt_OPTIONS)
 endif
 
-$(doc_ODT): $(doc_SOURCES) $(image_PNG_DATA) $(log_DATA)
+$(doc_ODT): $(doc_SOURCES) $(image_PNG_DATA) $(txt_DATA)
 	$(_rst2odt) $< $@
 
 pdf: $(doc_PDF)
