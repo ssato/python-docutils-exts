@@ -6,7 +6,7 @@
 """
 Bootstrap files to process rst2{odt,pdf}-wrapper.
 """
-import anyconfig as A
+import anyconfig
 import jinja2_cli.render as JR
 
 import datetime
@@ -25,7 +25,7 @@ VERSION = "0.0.4"
 
 LOG = logging.getLogger("docutils-exts-bootstrap")
 LOG.setLevel(logging.INFO)
-A.set_loglevel(logging.INFO)
+anyconfig.set_loglevel(logging.INFO)
 
 TMPL_EXT = ".j2"
 
@@ -185,7 +185,7 @@ def main(argv=sys.argv):
 
     if options.debug:
         LOG.setLevel(logging.DEBUG)
-        A.set_loglevel(logging.DEBUG)
+        anyconfig.set_loglevel(logging.DEBUG)
 
     if not options.workdir:
         options.workdir = os.path.join(os.curdir, "workdir-" + options.type)
@@ -194,7 +194,7 @@ def main(argv=sys.argv):
         if '~' in options.ctx:
             options.ctx = os.path.expanduser(options.ctx)
 
-        ctx = A.load(options.ctx)
+        ctx = anyconfig.load(options.ctx)
     else:
         ctx = {}
 
