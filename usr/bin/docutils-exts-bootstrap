@@ -195,7 +195,7 @@ def main(argv=sys.argv):
             options.ctx = os.path.expanduser(options.ctx)
 
         ctx = anyconfig.load(options.ctx)
-        for k, v in ctx.get("common", []):
+        for k, v in ctx.get("common", {}).items():
             ctx[k] = v  # Lift 'common' objects to top level.
     else:
         ctx = {}
