@@ -18,7 +18,7 @@ rst2odt_OPTIONS	?=
 
 doc_DATADIRS	?= logs data common common/*
 
-txt_DATA	?= $(foreach dir,$(doc_DATADIRS),$(wildcard $(dir)/*.txt $(dir)/*.rst))
+txt_DATA	?= $(foreach dir,$(doc_DATADIRS),$(wildcard $(dir)/*.txt $(dir)/*.rst $(dir)/*.csv))
 doc_SOURCES	?= $(doc_TOC_SOURCE) $(sort $(wildcard *.rst))
 
 
