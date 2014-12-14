@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rst2*/templates/default/*
 
 %changelog
+* Mon Dec 15 2014 Satoru SATOH <ssato@redhat.com> - 0.0.5-1
+- Bump up the version and rebuild for fedora 21
+
 * Fri May 23 2014 Satoru SATOH <ssato@redhat.com> - 0.0.4-1
 - Added bootstrap tool and default template files and make them included in
   a sub package
