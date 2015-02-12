@@ -9,7 +9,7 @@ AC_PROG_MKDIR_P
 
 AC_CONFIG_FILES([
 Makefile
-python-docutils-exts.spec
+package.spec
 ])
 
 AC_OUTPUT
