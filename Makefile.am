@@ -1,4 +1,4 @@
-EXTRA_DIST = README.rst python-docutils-exts.spec.in rpm.mk
+EXTRA_DIST = README.rst package.spec.in rpm.mk
 
 EXTRA_DIST += \
 $(wildcard examples/rst2odt/*) \
@@ -40,7 +40,7 @@ pkgdata8dir = /usr/share/rst2pdf/aux
 dist_pkgdata8_DATA = $(wildcard usr/share/rst2pdf/aux/*)
 
 pkgdata9dir = /usr/share/docutils-exts-common
-dist_pkgdata9_DATA = usr/share/docutils-exts-common/Makefile.common
+dist_pkgdata9_DATA = usr/share/docutils-exts-common/Makefile.common rpm.mk
 
 pkgdata10dir = /usr/share/docutils-exts-common/templates
 dist_pkgdata10_DATA = usr/share/docutils-exts-common/templates/Makefile.j2
