@@ -24,8 +24,8 @@ rst2pdf. And there are also some style files included.
 %package        bootstrap
 Summary:        Bootstrap tool for %{name}
 Requires:       %{name} = %{version}-%{release}
-Requires:       python-jinja2-cli
 Requires:       python-anyconfig
+Requires:       python-anytemplate
 
 %description    bootstrap
 Bootstrap tool for %{name}.
@@ -70,6 +70,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rst2*/templates/default/*
 
 %changelog
+* Mon May 11 2015 Satoru SATOH <ssato@redhat.com> - 0.0.7-1
+- [bootstrap] Switch from python-jinja2-cli to python-anytemplate to render
+  template files
+
 * Thu Feb 12 2015 Satoru SATOH <ssato@redhat.com> - 0.0.6-1
 - Rename the RPM SPEC and make rpm.mk also included in package
 - Fix a typo in the RPM SPEC

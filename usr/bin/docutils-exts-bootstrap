@@ -4,11 +4,8 @@
 # License: MIT
 #
 """
-Bootstrap files to process rst2{odt,pdf}-wrapper.
+Bootstrap files to process them with rst2{odt,pdf}-wrapper.
 """
-import anyconfig
-import jinja2_cli.render as JR
-
 import datetime
 import glob
 import logging
@@ -19,6 +16,11 @@ import pprint
 import random
 import sys
 
+import anyconfig
+import anytemplate.api
+import anytemplate.engine
+import anytemplate.utils
+
 
 # SEE configure.ac:
 VERSION = "0.0.4"
@@ -27,7 +29,16 @@ LOG = logging.getLogger("docutils-exts-bootstrap")
 LOG.setLevel(logging.INFO)
 anyconfig.set_loglevel(logging.INFO)
 
-TMPL_EXT = ".j2"
+
+def renderto(tmpl, ctx=None, output=None, *kwargs):
+    """
+    :param tmpl: Template file
+    :param ctx: Template context
+    :param output: Template context
+    :param kwargs: keyword arguments passed to anytemplate.api.render
+    """
+    res = anytemplate.api.render(tmpl, ctx, *kwargs)
+    anytemplate.utils.write_to_output(res, output)
 
 
 def sglob(files_pattern):
@@ -54,7 +65,7 @@ def _to_relpath(path, destdir):
                         '')
 
 
-def _tmpl_to_outpath(path, destdir, ext=TMPL_EXT):
+def _tmpl_to_outpath(path, destdir):
     """
     >>> _tmpl_to_outpath('/a/b/c/d/e.rst.j2', '/a/b/c')
     'd/e.rst'
@@ -63,20 +74,14 @@ def _tmpl_to_outpath(path, destdir, ext=TMPL_EXT):
     if relpath is None:
         return None
 
-    (fn, fext) = os.path.splitext(relpath)
-
-    if fext != ext:
-        LOG.warn("The {} does not match with expected extension, "
-                 "{}".format(fext, ext))
-        return None
-
+    (fn, _fext) = os.path.splitext(relpath)
     return fn
 
 
-def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT,
-                      force=False):
+def render_template(tmpl_path, destdir, workdir, ctx=None, engine=None,
+                    force=False):
     """
-    Compile given template file ``tmpl_path`` with given context ``ctx`` and
+    Render given template file ``tmpl_path`` with given context ``ctx`` and
     dump into the file under ``workdir`` with template file path relative to
     ``destdir`` kept.
 
@@ -84,9 +89,11 @@ def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT,
     :param destdir: Template top dir to strip from ``tmpl_path``
     :param workdir: Working dir to save compiled results
     :param ctx: Context dictionary to instantiate given template
+    :param engine: Template engine to render template files
+    :param force: Force overwrite outputs even if these already exist if True
     """
     tmpl_path = os.path.abspath(tmpl_path)
-    outpath = os.path.join(workdir, _tmpl_to_outpath(tmpl_path, destdir, ext))
+    outpath = os.path.join(workdir, _tmpl_to_outpath(tmpl_path, destdir))
     tpaths = [os.path.dirname(tmpl_path), os.curdir]
 
     if os.path.exists(outpath):
@@ -97,15 +104,16 @@ def _compile_template(tmpl_path, destdir, workdir, ctx={}, ext=TMPL_EXT,
             return
 
     LOG.debug("Compile the template {} to {}".format(tmpl_path, outpath))
-    JR.renderto(_to_relpath(tmpl_path, destdir), ctx, tpaths, outpath)
+    renderto(tmpl, ctx, outpath, at_paths=tpaths, at_engine=engine)
 
 
-def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT, force=False):
+def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
+                force=False):
     """
     Setup a file.
     """
-    if path.endswith(ext):
-        _compile_template(path, destdir, workdir, ctx, ext, force)
+    if render:
+        render_template(path, destdir, workdir, ctx, engine, force)
     else:
         relpath = _to_relpath(path, destdir)
         dst = os.path.join(workdir, relpath)
@@ -126,9 +134,16 @@ def _setup_file(path, destdir, workdir, ctx, ext=TMPL_EXT, force=False):
         os.symlink(path, dst)
 
 
-def setup_files(destdir, workdir, ctx, ext=TMPL_EXT, force=False):
+def setup_files(destdir, workdir, ctx, render=False, engine=None, force=False):
     """
     Setup files.
+
+    :param destdir: Template top dir to strip from ``tmpl_path``
+    :param workdir: Working dir to save compiled results
+    :param ctx: Context dictionary to instantiate given template
+    :param render: Render template instead of copy if True
+    :param engine: Template engine to render template files
+    :param force: Force overwrite outputs even if these already exist if True
     """
     for dirpath, dirnames, filenames in os.walk(destdir):
         for dn in dirnames:
@@ -138,14 +153,15 @@ def setup_files(destdir, workdir, ctx, ext=TMPL_EXT, force=False):
                 os.makedirs(d)
 
         for fn in filenames:
-            _setup_file(os.path.join(dirpath, fn), destdir, workdir, ctx, ext,
-                        force)
+            _setup_file(os.path.join(dirpath, fn), destdir, workdir, ctx,
+                        render, engine, force)
 
 
 USAGE = "%prog [Options...] DOC_NAME TEMPLATES_DIR"
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
 DEFAULTS = dict(ctx=None, debug=False, force=False,
-                workdir="/tmp/{}.{}".format(TODAY, random.randint(1, 10)))
+                workdir="/tmp/{}.{}".format(TODAY, random.randint(1, 10)),
+                render=False, engine=None)
 
 
 def option_parser(usage=USAGE, defaults=DEFAULTS):
@@ -155,6 +171,8 @@ def option_parser(usage=USAGE, defaults=DEFAULTS):
     :param defaults: Default option values
     :param usage: Usage text
     """
+    engines = [e.name() for e in anytemplate.engine.list_engines_by_priority()]
+
     parser = optparse.OptionParser(usage, version="%%prog %s" % VERSION)
     parser.set_defaults(**defaults)
     parser.add_option("-w", "--workdir", help="Working dir [%default]")
@@ -164,6 +182,11 @@ def option_parser(usage=USAGE, defaults=DEFAULTS):
                       help="Specify file path to provides context data "
                            "to instantiate templates. The file must be"
                            "in YAML format")
+    parser.add_option("-R", "--render", action="store_true",
+                      help="Render templates instead of copying templates")
+    parser.add_option("-E", "--engine", choices=engines,
+                      help="Template engine name such as jinja2 [%default]. "
+                           "Choises: " + ", ".join(engines))
     parser.add_option("-D", "--debug", action="store_true",
                       help="Debug (verbose) mode")
     return parser
@@ -207,7 +230,8 @@ def main(argv=sys.argv):
     if not os.path.exists(options.workdir):
         os.makedirs(options.workdir)
 
-    setup_files(tmpldir, options.workdir, ctx, TMPL_EXT, options.force)
+    setup_files(tmpldir, options.workdir, ctx, options.render, options.engine,
+                options.force)
     LOG.info("Bootstrap done. Results in: " + options.workdir)
 
 
