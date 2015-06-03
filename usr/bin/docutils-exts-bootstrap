@@ -21,7 +21,7 @@ import anytemplate
 
 
 # SEE build.sh:
-VERSION = "0.0.4"
+VERSION = "0.0.7"
 
 LOG = logging.getLogger("docutils-exts-bootstrap")
 LOG.setLevel(logging.INFO)
