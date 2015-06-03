@@ -17,9 +17,7 @@ import random
 import sys
 
 import anyconfig
-import anytemplate.api
-import anytemplate.engine
-import anytemplate.utils
+import anytemplate
 
 
 # SEE build.sh:
@@ -28,17 +26,6 @@ VERSION = "0.0.4"
 LOG = logging.getLogger("docutils-exts-bootstrap")
 LOG.setLevel(logging.INFO)
 anyconfig.set_loglevel(logging.INFO)
-
-
-def renderto(tmpl, ctx=None, output=None, *kwargs):
-    """
-    :param tmpl: Template file
-    :param ctx: Template context
-    :param output: Template context
-    :param kwargs: keyword arguments passed to anytemplate.api.render
-    """
-    res = anytemplate.api.render(tmpl, ctx, *kwargs)
-    anytemplate.utils.write_to_output(res, output)
 
 
 def sglob(files_pattern):
@@ -104,7 +91,8 @@ def render_template(tmpl_path, destdir, workdir, ctx=None, engine=None,
             return
 
     LOG.debug("Compile the template {} to {}".format(tmpl_path, outpath))
-    renderto(tmpl, ctx, outpath, at_paths=tpaths, at_engine=engine)
+    anytemplate.render_to(tmpl, context=ctx, output=outpath, at_paths=tpaths,
+                          at_engine=engine)
 
 
 def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
@@ -161,7 +149,7 @@ USAGE = "%prog [Options...] DOC_NAME TEMPLATES_DIR"
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
 DEFAULTS = dict(ctx=None, debug=False, force=False,
                 workdir="/tmp/{}.{}".format(TODAY, random.randint(1, 10)),
-                render=False, engine=None)
+                render=False, engine="jinja2")
 
 
 def option_parser(usage=USAGE, defaults=DEFAULTS):
