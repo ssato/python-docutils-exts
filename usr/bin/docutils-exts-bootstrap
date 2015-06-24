@@ -205,7 +205,7 @@ def main(argv=sys.argv):
         if '~' in options.ctx:
             options.ctx = os.path.expanduser(options.ctx)
 
-        ctx = anyconfig.load(options.ctx)
+        ctx = anyconfig.load(options.ctx, ac_template=True)
         for k, v in ctx.get("common", {}).items():
             ctx[k] = v  # Lift 'common' objects to top level.
     else:
