@@ -24,7 +24,7 @@ rst2pdf. And there are also some style files included.
 %package        bootstrap
 Summary:        Bootstrap tool for %{name}
 Requires:       %{name} = %{version}-%{release}
-Requires:       python-anyconfig
+Requires:       python-anyconfig >= 0.0.6
 Requires:       python-anytemplate
 
 %description    bootstrap
@@ -70,6 +70,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rst2*/templates/default/*
 
 %changelog
+* Wed Jun 24 2015 Satoru SATOH <ssato@redhat.com> - 0.0.8-1
+- [bootstrap] raise the version of anyconfig required to support loading of
+  template context files
+
 * Wed Jun  3 2015 Satoru SATOH <ssato@redhat.com> - 0.0.7-1
 - [bootstrap] Switch from python-jinja2-cli to python-anytemplate to render
   template files
