@@ -14,6 +14,7 @@ import os.path
 import os
 import pprint
 import random
+import shutil
 import sys
 
 import anyconfig
@@ -22,6 +23,8 @@ import anytemplate
 
 # SEE build.sh:
 VERSION = "0.0.7"
+TEMPLATE_PATH = "/usr/share/rst2odt/templates"
+TEMPLATE_EXT = ".j2"
 
 LOG = logging.getLogger("docutils-exts-bootstrap")
 LOG.setLevel(logging.INFO)
@@ -95,13 +98,27 @@ def render_template(tmpl_path, destdir, workdir, ctx=None, engine=None,
                           at_paths=tpaths, at_engine=engine)
 
 
+def ensure_dir_exists(outdir):
+    """
+    Ensure output dir exists.
+    """
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+
+
 def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
-                force=False):
+                tmpl_ext=TEMPLATE_EXT, force=False):
     """
     Setup a file.
     """
-    if render:
-        render_template(path, destdir, workdir, ctx, engine, force)
+    if path.endswith(tmpl_ext):
+        if render:
+            render_template(path, destdir, workdir, ctx, engine, force)
+        else:
+            dstdir = os.path.join(workdir, relpath)
+            ensure_dir_exists(dstdir)
+            LOG.debug("Copy template from %s to %s", path, dstdir)
+            shutil.copy2(path, dstdir)
     else:
         relpath = _to_relpath(path, destdir)
         dst = os.path.join(workdir, relpath)
@@ -114,15 +131,14 @@ def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
                 return
 
         dstdir = os.path.dirname(dst)
-        if not os.path.exists(dstdir):
-            os.makedirs(dstdir)
-
+        ensure_dir_exists(dstdir)
         LOG.debug("Make a symlink from {} to {} (relpath)".format(path,
                                                                   relpath))
         os.symlink(path, dst)
 
 
-def setup_files(destdir, workdir, ctx, render=False, engine=None, force=False):
+def setup_files(destdir, workdir, ctx, render=False, engine=None,
+                tmpl_ext=TEMPLATE_EXT, force=False):
     """
     Setup files.
 
@@ -131,6 +147,7 @@ def setup_files(destdir, workdir, ctx, render=False, engine=None, force=False):
     :param ctx: Context dictionary to instantiate given template
     :param render: Render template instead of copy if True
     :param engine: Template engine to render template files
+    :param tmpl_ext: Jinja2 template file extension [.j2]
     :param force: Force overwrite outputs even if these already exist if True
     """
     for dirpath, dirnames, filenames in os.walk(destdir):
@@ -145,11 +162,12 @@ def setup_files(destdir, workdir, ctx, render=False, engine=None, force=False):
                         render, engine, force)
 
 
-USAGE = "%prog [Options...] DOC_NAME TEMPLATES_DIR"
+USAGE = "%prog [Options...] DOC_NAME"
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
 DEFAULTS = dict(ctx=None, debug=False, force=False,
                 workdir="/tmp/{}.{}".format(TODAY, random.randint(1, 10)),
-                render=False, engine="jinja2")
+                type="default", template_path=TEMPLATE_PATH, render=False,
+                engine="jinja2")
 
 
 def option_parser(usage=USAGE, defaults=DEFAULTS):
@@ -160,10 +178,15 @@ def option_parser(usage=USAGE, defaults=DEFAULTS):
     :param usage: Usage text
     """
     engines = [e.name() for e in anytemplate.engine.list_engines_by_priority()]
+    ttypes = [os.path.basename(d) for d
+              in sglob(os.path.join(TEMPLATE_PATH, '*')) if os.path.isdir(d)]
 
     parser = optparse.OptionParser(usage, version="%%prog %s" % VERSION)
     parser.set_defaults(**defaults)
     parser.add_option("-w", "--workdir", help="Working dir [%default]")
+    parser.add_option("-t", "--type", choices=ttypes,
+                      help=("Template type [%%default]: %s" % ttypes)),
+    parser.add_option("-T", "--template-path", help="Template path [%default]")
     parser.add_option("-f", "--force", action="store_true",
                       help="Force overwrite outputs even if they exist")
     parser.add_option("-C", "--ctx",
@@ -187,12 +210,12 @@ def main(argv=sys.argv):
     parser = option_parser()
     (options, args) = parser.parse_args(argv[1:])
 
-    if not args or len(args) < 2:
+    if not args:
         parser.print_usage()
         sys.exit(-1)
 
     doc_name = args[0]
-    tmpldir = args[1]
+    tmpldir = os.path.join(options.template_path, options.type)
 
     if options.debug:
         LOG.setLevel(logging.DEBUG)
