@@ -91,8 +91,8 @@ def render_template(tmpl_path, destdir, workdir, ctx=None, engine=None,
             return
 
     LOG.debug("Compile the template {} to {}".format(tmpl_path, outpath))
-    anytemplate.render_to(tmpl, context=ctx, output=outpath, at_paths=tpaths,
-                          at_engine=engine)
+    anytemplate.render_to(tmpl_path, context=ctx, output=outpath,
+                          at_paths=tpaths, at_engine=engine)
 
 
 def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
