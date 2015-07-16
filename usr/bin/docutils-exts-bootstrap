@@ -211,7 +211,7 @@ def main(argv=sys.argv):
     else:
         ctx = {}
 
-    if doc not in ctx:
+    if "doc" not in ctx:
         ctx["doc"] = dict()
 
     if "name" not in ctx["doc"]:
