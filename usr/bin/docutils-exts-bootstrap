@@ -248,6 +248,7 @@ def main(argv=sys.argv):
     if not os.path.exists(options.workdir):
         os.makedirs(options.workdir)
 
+    anyconfig.dump(ctx, os.path.join(options.workdir, "ctx.yml"))
     setup_files(tmpldir, options.workdir, ctx, options.render, options.engine,
                 options.force)
     LOG.info("Bootstrap done. Results in: %s", options.workdir)
