@@ -211,8 +211,15 @@ def main(argv=sys.argv):
     else:
         ctx = {}
 
-    ctx["doc_name"] = doc_name
-    ctx["doc_revision"] = "{}.1".format(TODAY)
+    if doc not in ctx:
+        ctx["doc"] = dict()
+
+    if "name" not in ctx["doc"]:
+        ctx["doc"]["name"] = doc_name
+
+    if "revision" not in ctx["doc"]:
+        ctx["doc"]["revision"] = "{}.1".format(TODAY)
+
     LOG.debug("ctx:\n" + pprint.pformat(ctx))
 
     if not os.path.exists(options.workdir):
