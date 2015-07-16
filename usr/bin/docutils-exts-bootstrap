@@ -220,7 +220,7 @@ def main(argv=sys.argv):
 
     setup_files(tmpldir, options.workdir, ctx, options.render, options.engine,
                 options.force)
-    LOG.info("Bootstrap done. Results in: " + options.workdir)
+    LOG.info("Bootstrap done. Results in: %s", options.workdir)
 
 
 if __name__ == '__main__':
