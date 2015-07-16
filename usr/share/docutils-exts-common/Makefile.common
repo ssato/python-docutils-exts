@@ -17,6 +17,9 @@ tmplrender ?= anytemplate_cli -C ctx.yml -E jinja2 -v -o $@ $<
 # replace symlink with original to fork:
 fork_file = f=$<; test "x$$f" = "x" || (org=`readlink $$f`; rm -f $$f && cp $$org $$f)
 
+%.rst: %.j2
+	$(tmplrender)
+
 Makefile.depends: $(image_SVG_DATA) $(image_XCF_DATA) $(templates_DATA)
 	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp
 	for f in $(image_SVG_DATA); do \
