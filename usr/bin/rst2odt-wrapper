@@ -15,7 +15,7 @@ styledir=/usr/share/rst2odt/styles
 stylefile_ext=".odt"
 header="%t%"
 footer="%p% / %P%"
-eopts="--generate-oowriter-toc --strip-comments --create-links"
+eopts="--generate-oowriter-toc --strip-comments --create-links --traceback"
 dryrun=0
 topdf=0
 
