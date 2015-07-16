@@ -1,3 +1,2 @@
-NAME = {{ doc_name }}
-
-include /usr/share/{{ doc_builder }}/aux/Makefile
+NAME = {{ doc.name }}
+include /usr/share/{{ doc.builder|default('rst2odt') }}/aux/Makefile
