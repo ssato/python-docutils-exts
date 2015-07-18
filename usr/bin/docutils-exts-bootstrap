@@ -115,6 +115,7 @@ def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
         if render:
             render_template(path, destdir, workdir, ctx, engine, force)
         else:
+            relpath = _to_relpath(path, destdir)
             dstdir = os.path.join(workdir, relpath)
             ensure_dir_exists(dstdir)
             LOG.debug("Copy template from %s to %s", path, dstdir)
@@ -159,8 +160,7 @@ def setup_files(destdir, workdir, ctx, render=False, engine=None,
 
         for fn in filenames:
             _setup_file(os.path.join(dirpath, fn), destdir, workdir, ctx,
-                        render, engine, force)
-
+                        render, engine, tmpl_ext, force)
 
 USAGE = "%prog [Options...] DOC_NAME"
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
@@ -250,7 +250,7 @@ def main(argv=sys.argv):
 
     anyconfig.dump(ctx, os.path.join(options.workdir, "ctx.yml"))
     setup_files(tmpldir, options.workdir, ctx, options.render, options.engine,
-                options.force)
+                TEMPLATE_EXT, options.force)
     LOG.info("Bootstrap done. Results in: %s", options.workdir)
 
 
