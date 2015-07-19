@@ -27,10 +27,6 @@ Makefile.depends: $(image_SVG_DATA) $(image_XCF_DATA) $(templates_DATA)
 		out=`echo $$f | sed -e 's/\.xcf/.png/g'`; \
 		echo -ne "$$out: $$f\n\t\$$(xcf2png)\n\n" >> $@.tmp; \
 	done
-	for f in $(templates_DATA); do \
-		out=`echo $$f | sed -e 's/.j2//g'`; \
-		echo -ne "$$out: $$f ctx.yml\n\t\$$(tmplrender)\n\n" >> $@.tmp; \
-	done
 	mv $@.tmp $@
 
 include Makefile.depends

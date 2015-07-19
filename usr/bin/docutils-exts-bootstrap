@@ -116,7 +116,7 @@ def _setup_file(path, destdir, workdir, ctx, render=False, engine=None,
             render_template(path, destdir, workdir, ctx, engine, force)
         else:
             relpath = _to_relpath(path, destdir)
-            dstdir = os.path.join(workdir, relpath)
+            dstdir = os.path.dirname(os.path.join(workdir, relpath))
             ensure_dir_exists(dstdir)
             LOG.debug("Copy template from %s to %s", path, dstdir)
             shutil.copy2(path, dstdir)
@@ -161,6 +161,13 @@ def setup_files(destdir, workdir, ctx, render=False, engine=None,
         for fn in filenames:
             _setup_file(os.path.join(dirpath, fn), destdir, workdir, ctx,
                         render, engine, tmpl_ext, force)
+
+def build_aux_file(workdir, ctx, out):
+    tmpl = out + ".j2"
+    if os.path.exists(tmpl):
+        anytemplate.render_to(tmpl, context=ctx, output=out,
+                              at_paths=[workdir], at_engine="jinja2")
+
 
 USAGE = "%prog [Options...] DOC_NAME"
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
@@ -248,9 +255,11 @@ def main(argv=sys.argv):
     if not os.path.exists(options.workdir):
         os.makedirs(options.workdir)
 
-    anyconfig.dump(ctx, os.path.join(options.workdir, "ctx.yml"))
     setup_files(tmpldir, options.workdir, ctx, options.render, options.engine,
                 TEMPLATE_EXT, options.force)
+    build_aux_file(options.workdir, ctx, "ctx.yml")
+    build_aux_file(options.workdir, ctx, "Makefile")
+
     LOG.info("Bootstrap done. Results in: %s", options.workdir)
 
 
