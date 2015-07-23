@@ -30,6 +30,7 @@ Makefile.depends: $(image_SVG_DATA) $(image_XCF_DATA) $(templates_DATA)
 	for f in $(templates_DATA); do \
 		out=`echo $$f | sed -e 's/\.j2//g'`; \
 		echo -ne "$$out: $$f\n\t\$$(tmplrender)\n\n" >> $@.tmp; \
+		echo "doc_SOURCES += $$out" >> $@.tmp; \
 	done
 	mv $@.tmp $@
 
