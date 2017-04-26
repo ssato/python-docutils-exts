@@ -27,8 +27,9 @@ TEMPLATE_PATH = "/usr/share/rst2odt/templates"
 TEMPLATE_EXT = ".j2"
 
 LOG = logging.getLogger("docutils-exts-bootstrap")
+ALOG = logging.getLogger("anyconfig")
 LOG.setLevel(logging.INFO)
-anyconfig.set_loglevel(logging.INFO)
+ALOG.setLevel(logging.INFO)
 
 
 def sglob(files_pattern):
@@ -226,7 +227,7 @@ def main(argv=sys.argv):
 
     if options.debug:
         LOG.setLevel(logging.DEBUG)
-        anyconfig.set_loglevel(logging.DEBUG)
+        ALOG.setLevel(logging.DEBUG)
 
     if not options.workdir:
         options.workdir = os.path.join(os.curdir, "workdir-" + options.type)
