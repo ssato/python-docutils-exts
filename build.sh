@@ -4,7 +4,7 @@
 #
 set -e
 
-version=0.0.8
+version=0.1.0
 snapshot_build=${_SNAPSHOT_BUILD:-0}
 
 if test "x$snapshot_build" = "x1"; then

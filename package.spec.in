@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/rst2*/templates/default/*
 
 %changelog
+* Mon Feb 13 2017 Satoru SATOH <ssato@redhat.com> - 0.1.0-1
+- Follow API change in anyconfig, anyconfig.set_loglevel was removed
+
 * Wed Jun 24 2015 Satoru SATOH <ssato@redhat.com> - 0.0.8-1
 - [bootstrap] raise the version of anyconfig required to support loading of
   template context files
