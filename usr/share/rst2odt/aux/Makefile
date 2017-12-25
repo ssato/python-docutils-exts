@@ -25,7 +25,7 @@ doc_SOURCES	?= $(doc_TOC_SOURCE) $(sort $(wildcard *.rst))
 all: pdf
 
 include /usr/share/docutils-exts-common/Makefile.common
--include /usr/share/rst2odt/Makefile.bootstrap
+-include /usr/share/rst2odt/aux/Makefile.bootstrap
 
 # rst -> odt
 ifeq ($(STYLE),NULL)
