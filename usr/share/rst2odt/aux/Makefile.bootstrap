@@ -1,5 +1,6 @@
 # Select flavor,'rhui', etc.
 FLAVOR	?= default
+DOC_NAME ?= $(NAME)
 
 bootstrap:
 ifeq ($(DOC_NAME),)

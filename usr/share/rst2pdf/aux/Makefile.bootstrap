@@ -1,6 +1,6 @@
 # Select flavor,'rhui', etc.
 FLAVOR	?= default
-DOC_NAME	=
+DOC_NAME	?= $(NAME)
 TEMPLATES_TOPDIR	?= /usr/share/rst2pdf/templates
 
 TEMPLATES_DIR ?= $(TEMPLATES_TOPDIR)/$(FLAVOR)
