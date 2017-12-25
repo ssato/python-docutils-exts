@@ -2,7 +2,7 @@
 FLAVOR	?= default
 
 bootstrap:
-if ($(DOC_NAME),)
+ifeq ($(DOC_NAME),)
 	@echo "Please set DOC_NAME (make -C ... DOC_NAME=... )"
 else
 	docutils-exts-bootstrap -w ./ -D $(DOC_NAME) -t $(FLAVOR)
