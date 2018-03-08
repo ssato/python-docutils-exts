@@ -5,15 +5,15 @@
 %endif
 
 %global desc \
-This package provides some tools to convert reStructured text files for \
-documentations and presentation slides, to PDF and ODT files w/ rst2odt and \
-rst2pdf, along with some style files, scripts to convert and optimize image \
-files and so on.
+This package provides some tools extend commands in python-docutils to \
+convert reStructured text files to PDF and ODT files, and help making \
+documents and presentation slides easy, along with related data such as \
+some style files, scripts to convert and optimize image files.
 
 Name:           @PACKAGE@
 Version:        @VERSION@
 Release:        1%{?dist}
-Summary:        Tools extend some converters from reSt to other formats like PDF and ODT
+Summary:        Tools and data to extend some converters in python-docutils
 License:        MIT
 URL:            https://github.com/ssato/python-docutils-exts
 Source0:        %{name}-%{version}.tar.xz
@@ -30,7 +30,7 @@ Requires:       unoconv
 %description    %{desc}
 
 %package        rst2pdf
-Summary:        Tools and data to extend rst2pdf for %{name}
+Summary:        Aux tool and data to extend rst2pdf for %{name}
 Requires:       %{name} = %{version}-%{release}
 Requires:       rst2pdf
 
