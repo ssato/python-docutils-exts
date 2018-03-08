@@ -26,7 +26,7 @@ Requires:       python-anytemplate
 Bootstrap tool for %{name}.
 
 %prep
-%setup -q
+%autosetup -n %{name}-%{version}
 
 %build
 %configure --quiet --enable-silent-rules
