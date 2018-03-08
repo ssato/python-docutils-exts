@@ -19,7 +19,9 @@ rst2pdf. And there are also some style files included.
 %package        bootstrap
 Summary:        Bootstrap tool for %{name}
 Requires:       %{name} = %{version}-%{release}
-Requires:       python-anyconfig >= 0.0.6
+# It's available from my copr repo,
+# https://copr.fedorainfracloud.org/coprs/ssato/python-anyconfig/.
+# To enable it, run: dnf copr enable ssato/python-anyconfig
 Requires:       python-anytemplate
 
 %description    bootstrap
