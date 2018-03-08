@@ -50,7 +50,7 @@ Bootstrap tool and misc related data for %{name}.
 make %{?_smp_mflags} V=0
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=%{buildroot}
 
 %files
 %doc README.rst examples
