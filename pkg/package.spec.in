@@ -19,7 +19,6 @@ URL:            https://github.com/ssato/python-docutils-exts
 Source0:        %{name}-%{version}.tar.xz
 BuildArch:      noarch
 Requires:       ipa-ex-gothic-fonts, ipa-ex-mincho-fonts, ipa-mincho-fonts, ipa-gothic-fonts
-Requires:       rst2pdf
 %if %{with python3}
 Requires:       python3-docutils
 %else
@@ -29,6 +28,16 @@ Requires:       inkscape, optipng, gimp
 Requires:       unoconv
 
 %description    %{desc}
+
+%package        rst2pdf
+Summary:        Tools and data to extend rst2pdf for %{name}
+Requires:       %{name} = %{version}-%{release}
+Requires:       rst2pdf
+
+%description    rst2pdf %{desc}
+
+Tools and misc related data to extend rst2pdf (reStructured Text to PDF
+convertor) for %{name}.
 
 %package        bootstrap
 Summary:        Bootstrap tool and data for %{name}
@@ -55,14 +64,16 @@ make install DESTDIR=%{buildroot}
 %files
 %doc README.rst examples
 %config(noreplace) %{_sysconfdir}/%{name}/rst2odt.d/00_default.conf
-%config(noreplace) %{_sysconfdir}/%{name}/rst2pdf.d/00_default.conf
 %{_bindir}/gimp_batch_convert_xcf2png.sh
 %{_bindir}/rst2odt-wrapper
-%{_bindir}/rst2pdf-slide
-%{_bindir}/rst2pdf-doc
 %{_datadir}/docutils-exts-common/*
 %{_datadir}/rst2odt/aux/*
 %{_datadir}/rst2odt/styles/*
+
+%files          rst2pdf
+%config(noreplace) %{_sysconfdir}/%{name}/rst2pdf.d/00_default.conf
+%{_bindir}/rst2pdf-slide
+%{_bindir}/rst2pdf-doc
 %{_datadir}/rst2pdf/aux/*
 %{_datadir}/rst2pdf/images/*
 %{_datadir}/rst2pdf/styles/doc/*
