@@ -18,6 +18,7 @@ import shutil
 import sys
 
 import anyconfig
+import anyconfig.compat  # TODO
 import anytemplate
 
 
@@ -27,8 +28,10 @@ TEMPLATE_PATH = "/usr/share/rst2odt/templates"
 TEMPLATE_EXT = ".j2"
 
 LOG = logging.getLogger("docutils-exts-bootstrap")
-ALOG = logging.getLogger("anyconfig")
+LOG.addHandler(anyconfig.compat.NullHandler())
 LOG.setLevel(logging.INFO)
+
+ALOG = logging.getLogger("anyconfig")
 ALOG.setLevel(logging.INFO)
 
 
