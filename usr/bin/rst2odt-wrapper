@@ -106,7 +106,8 @@ else
     debug=""
 fi
 
-cmd="rst2odt \
+rst2odt=$(which rst2odt-3 2>/dev/null || which rst2odt 2>/dev/null)
+cmd="${rst2odt:?} \
     --stylesheet=$style \
     --custom-odt-header=\"$header\" \
     --custom-odt-footer=\"$footer\" \
