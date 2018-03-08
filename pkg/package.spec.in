@@ -1,7 +1,19 @@
+%if 0%{?fedora} || 0%{?rhel} > 7
+%bcond_without python3
+%else
+%bcond_with python3
+%endif
+
+%global desc \
+This package provides some tools to convert reStructured text files for \
+documentations and presentation slides, to PDF and ODT files w/ rst2odt and \
+rst2pdf, along with some style files, scripts to convert and optimize image \
+files and so on.
+
 Name:           @PACKAGE@
 Version:        @VERSION@
 Release:        1%{?dist}
-Summary:        Some rst converters and style data files for python-docutils and rst2pdf
+Summary:        Tools extend some converters from reSt to other formats like PDF and ODT
 License:        MIT
 URL:            https://github.com/ssato/python-docutils-exts
 Source0:        %{name}-%{version}.tar.xz
@@ -11,21 +23,19 @@ Requires:       rst2pdf, python-docutils
 Requires:       inkscape, optipng, gimp
 Requires:       unoconv
 
-%description
-This package provides some tools to convert reStructured text files for
-documentations and presentation slides, to PDF and ODT files w/ rst2odt and
-rst2pdf. And there are also some style files included.
+%description    %{desc}
 
 %package        bootstrap
-Summary:        Bootstrap tool for %{name}
+Summary:        Bootstrap tool and data for %{name}
 Requires:       %{name} = %{version}-%{release}
 # It's available from my copr repo,
 # https://copr.fedorainfracloud.org/coprs/ssato/python-anyconfig/.
 # To enable it, run: dnf copr enable ssato/python-anyconfig
 Requires:       python-anytemplate
 
-%description    bootstrap
-Bootstrap tool for %{name}.
+%description    bootstrap %{desc}
+
+Bootstrap tool and misc related data for %{name}.
 
 %prep
 %autosetup -n %{name}-%{version}
