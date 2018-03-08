@@ -60,6 +60,10 @@ make %{?_smp_mflags} V=0
 
 %install
 make install DESTDIR=%{buildroot}
+# Quick and dirty hack to make work w/ python3:
+%if %{with python3}
+sed -i '1s/python/&3/' %{buildroot}%{_bindir}/docutils-exts-bootstrap
+%endif
 
 %files
 %doc README.rst examples
