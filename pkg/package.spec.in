@@ -19,7 +19,12 @@ URL:            https://github.com/ssato/python-docutils-exts
 Source0:        %{name}-%{version}.tar.xz
 BuildArch:      noarch
 Requires:       ipa-ex-gothic-fonts, ipa-ex-mincho-fonts, ipa-mincho-fonts, ipa-gothic-fonts
-Requires:       rst2pdf, python-docutils
+Requires:       rst2pdf
+%if %{with python3}
+Requires:       python3-docutils
+%else
+Requires:       python2-docutils
+%endif
 Requires:       inkscape, optipng, gimp
 Requires:       unoconv
 
