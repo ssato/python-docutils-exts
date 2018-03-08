@@ -6,10 +6,12 @@
 """
 Bootstrap files to process them with rst2{odt,pdf}-wrapper.
 """
+from __future__ import print_function
+
+import argparse
 import datetime
 import glob
 import logging
-import optparse
 import os.path
 import os
 import pprint
@@ -23,7 +25,7 @@ import anytemplate
 
 
 # SEE build.sh:
-VERSION = "0.0.7"
+__version__ = "0.1.1"
 TEMPLATE_PATH = "/usr/share/rst2odt/templates"
 TEMPLATE_EXT = ".j2"
 
@@ -173,15 +175,14 @@ def build_aux_file(workdir, ctx, out):
                               at_paths=[workdir], at_engine="jinja2")
 
 
-USAGE = "%prog [Options...] DOC_NAME"
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
-DEFAULTS = dict(ctx=None, debug=False, force=False,
+DEFAULTS = dict(name=None, ctx=None, debug=False, force=False,
                 workdir="/tmp/{}.{}".format(TODAY, random.randint(1, 10)),
                 type="default", template_path=TEMPLATE_PATH, render=False,
                 engine="jinja2")
 
 
-def option_parser(usage=USAGE, defaults=DEFAULTS):
+def option_parser(defaults=DEFAULTS):
     """
     Make up an option and arguments parser.
 
@@ -192,26 +193,29 @@ def option_parser(usage=USAGE, defaults=DEFAULTS):
     ttypes = [os.path.basename(d) for d
               in sglob(os.path.join(TEMPLATE_PATH, '*')) if os.path.isdir(d)]
 
-    parser = optparse.OptionParser(usage, version="%%prog %s" % VERSION)
-    parser.set_defaults(**defaults)
-    parser.add_option("-w", "--workdir", help="Working dir [%default]")
-    parser.add_option("-t", "--type", choices=ttypes,
-                      help=("Template type [%%default]: %s" % ttypes)),
-    parser.add_option("-T", "--template-path", help="Template path [%default]")
-    parser.add_option("-f", "--force", action="store_true",
+    psr = argparse.ArgumentParser()
+    psr.set_defaults(**defaults)
+
+    psr.add_argument("name", type=str, help="Document name")
+    psr.add_argument("-w", "--workdir", help="Working dir [%(default)s]")
+    psr.add_argument("-t", "--type", choices=ttypes,
+                     help=("Template type [%%(default)s]: %s" % ttypes)),
+    psr.add_argument("-T", "--template-path",
+                     help="Template path [%(default)s]")
+    psr.add_argument("-f", "--force", action="store_true",
                       help="Force overwrite outputs even if they exist")
-    parser.add_option("-C", "--ctx",
-                      help="Specify file path to provides context data "
-                           "to instantiate templates. The file must be"
-                           "in YAML format")
-    parser.add_option("-R", "--render", action="store_true",
-                      help="Render templates instead of copying templates")
-    parser.add_option("-E", "--engine", choices=engines,
-                      help="Template engine name such as jinja2 [%default]. "
-                           "Choises: " + ", ".join(engines))
-    parser.add_option("-D", "--debug", action="store_true",
+    psr.add_argument("-C", "--ctx",
+                     help="Specify file path to provides context data "
+                          "to instantiate templates. The file must be"
+                          "in YAML format")
+    psr.add_argument("-R", "--render", action="store_true",
+                     help="Render templates instead of copying templates")
+    psr.add_argument("-E", "--engine", choices=engines,
+                     help="Template engine name such as jinja2 [%(default)s]. "
+                          "Choises: " + ", ".join(engines))
+    psr.add_argument("-D", "--debug", action="store_true",
                       help="Debug (verbose) mode")
-    return parser
+    return psr
 
 
 def main(argv=sys.argv):
@@ -219,27 +223,27 @@ def main(argv=sys.argv):
     :param argv: Argument list to parse [sys.argv]
     """
     parser = option_parser()
-    (options, args) = parser.parse_args(argv[1:])
+    args = parser.parse_args(argv[1:])
 
-    if not args:
+    if not args or args.name is None:
         parser.print_usage()
         sys.exit(-1)
 
-    doc_name = args[0]
-    tmpldir = os.path.join(options.template_path, options.type)
+    doc_name = args.name
+    tmpldir = os.path.join(args.template_path, args.type)
 
-    if options.debug:
+    if args.debug:
         LOG.setLevel(logging.DEBUG)
         ALOG.setLevel(logging.DEBUG)
 
-    if not options.workdir:
-        options.workdir = os.path.join(os.curdir, "workdir-" + options.type)
+    if not args.workdir:
+        args.workdir = os.path.join(os.curdir, "workdir-" + args.type)
 
-    if options.ctx:
-        if '~' in options.ctx:
-            options.ctx = os.path.expanduser(options.ctx)
+    if args.ctx:
+        if '~' in args.ctx:
+            args.ctx = os.path.expanduser(args.ctx)
 
-        ctx = anyconfig.load(options.ctx, ac_template=True)
+        ctx = anyconfig.load(args.ctx, ac_template=True)
         for k, v in ctx.get("common", {}).items():
             ctx[k] = v  # Lift 'common' objects to top level.
     else:
@@ -256,15 +260,15 @@ def main(argv=sys.argv):
 
     LOG.debug("ctx:\n" + pprint.pformat(ctx))
 
-    if not os.path.exists(options.workdir):
-        os.makedirs(options.workdir)
+    if not os.path.exists(args.workdir):
+        os.makedirs(args.workdir)
 
-    setup_files(tmpldir, options.workdir, ctx, options.render, options.engine,
-                TEMPLATE_EXT, options.force)
-    build_aux_file(options.workdir, ctx, "ctx.yml")
-    build_aux_file(options.workdir, ctx, "Makefile")
+    setup_files(tmpldir, args.workdir, ctx, args.render, args.engine,
+                TEMPLATE_EXT, args.force)
+    build_aux_file(args.workdir, ctx, "ctx.yml")
+    build_aux_file(args.workdir, ctx, "Makefile")
 
-    LOG.info("Bootstrap done. Results in: %s", options.workdir)
+    LOG.info("Bootstrap done. Results in: %s", args.workdir)
 
 
 if __name__ == '__main__':
