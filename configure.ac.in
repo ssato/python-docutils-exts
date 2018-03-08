@@ -9,7 +9,7 @@ AC_PROG_MKDIR_P
 
 AC_CONFIG_FILES([
 Makefile
-package.spec
+pkg/package.spec
 ])
 
 AC_OUTPUT
