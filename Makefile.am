@@ -1,4 +1,4 @@
-EXTRA_DIST = pkg/pkginfo.sh pkg/rpm.mk pkg/package.spec.in
+EXTRA_DIST = README.rst pkg/pkginfo.sh pkg/rpm.mk pkg/package.spec.in
 
 EXTRA_DIST += \
 $(wildcard examples/rst2odt/*) \
@@ -8,7 +8,7 @@ $(wildcard examples/rst2pdf/*) \
 $(NULL)
 
 abs_srcdir  ?= .
-include $(abs_srcdir)/rpm.mk
+include $(abs_srcdir)/pkg/rpm.mk
 
 dist_bin_SCRIPTS = $(wildcard usr/bin/*)
 
@@ -40,7 +40,7 @@ pkgdata8dir = $(datadir)/rst2pdf/aux
 dist_pkgdata8_DATA = $(wildcard usr/share/rst2pdf/aux/*)
 
 pkgdata9dir = $(datadir)/docutils-exts-common
-dist_pkgdata9_DATA = usr/share/docutils-exts-common/Makefile.common rpm.mk
+dist_pkgdata9_DATA = usr/share/docutils-exts-common/Makefile.common pkg/rpm.mk
 
 pkgdata10dir = $(datadir)/docutils-exts-common/templates
 dist_pkgdata10_DATA = usr/share/docutils-exts-common/templates/Makefile.j2
