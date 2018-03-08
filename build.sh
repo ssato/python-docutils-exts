@@ -4,15 +4,18 @@
 #
 set -e
 
-version=0.1.0
+source pkg/pkginfo.sh
 snapshot_build=${_SNAPSHOT_BUILD:-0}
 
 if test "x$snapshot_build" = "x1"; then
-    version="$version.$(date +%Y%m%d)"
+    VERSION="${VERSION:?}.$(date +%Y%m%d)"
 fi
 
-echo "[Info] Version set to ${version}. Now preparing confgiure.ac ..."
-sed "s/@VERSION@/${version}/g" configure.ac.in > configure.ac
+echo "[Info] Preparing confgiure.ac for ${PACKAGE:?}-${VERSION:?} ..."
+sed "
+s/@PACKAGE@/${PACKAGE}/g
+s/@VERSION@/${VERSION}/g
+" configure.ac.in > configure.ac
 
 echo "[Info] Start to build SRPM ..."
 autoreconf -vfi && ./configure && make srpm

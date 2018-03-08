@@ -14,7 +14,8 @@ $(NULL)
 $(rpmdirs):
 	$(AM_V_at)$(MKDIR_P) $@
 
-rpm srpm: package.spec dist $(rpmdirs)
+abs_top_srcdir  ?= .
+rpm srpm: $(abs_top_srcdir)/pkg/package.spec dist $(rpmdirs)
 
 rpm:
 	$(AM_V_GEN)$(rpmbuild) -bb $<

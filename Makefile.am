@@ -1,4 +1,4 @@
-EXTRA_DIST = README.rst package.spec.in rpm.mk
+EXTRA_DIST = pkg/pkginfo.sh pkg/rpm.mk pkg/package.spec.in
 
 EXTRA_DIST += \
 $(wildcard examples/rst2odt/*) \
