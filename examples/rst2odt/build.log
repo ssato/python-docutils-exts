@@ -8,7 +8,7 @@ for f in  images/xcf/0.xcf ; do \
         out=`echo $f | sed -e 's/\.xcf/.png/g'`; \
         echo -ne "$out: $f\n\t\$(xcf2png)\n\n" >> Makefile.depends.tmp; \
 done
-for f in 00_index.rst.j2 20_template.rst.j2 ; do \
+for f in 00_00_revision.rst.j2 30_template.rst.j2 ; do \
         out=`echo $f | sed -e 's/\.j2//g'`; \
         echo -ne "$out: $f ctx.yml\n\t\$(tmplrender)\n\n" >> Makefile.depends.tmp; \
         echo "doc_SOURCES += $out" >> Makefile.depends.tmp; \
@@ -18,8 +18,8 @@ anyconfig_cli --template /home/ssato/repos/public/github.com/ssato/python-docuti
 Loading: /home/ssato/repos/public/github.com/ssato/python-docutils-exts.git/examples/ctx/10_hosts.yml
 Loading: /home/ssato/repos/public/github.com/ssato/python-docutils-exts.git/examples/ctx/00_base.yml
 Dumping: ctx.yml
-anytemplate_cli -C ctx.yml -E jinja2 -v -o 00_index.rst 00_index.rst.j2
-anytemplate_cli -C ctx.yml -E jinja2 -v -o 20_template.rst 20_template.rst.j2
+anytemplate_cli -C ctx.yml -E jinja2 -v -o 00_00_revision.rst 00_00_revision.rst.j2
+anytemplate_cli -C ctx.yml -E jinja2 -v -o 30_template.rst 30_template.rst.j2
 inkscape -e images/svg/0.png.tmp images/svg/0.svg && optipng -o7 -fix -force images/svg/0.png.tmp && mv images/svg/0.png.tmp images/svg/0.png
 Background RRGGBBAA: ffffff00
 Area 0:0:455.281:320.969 exported to 455 x 321 pixels (96 dpi)
@@ -60,7 +60,7 @@ Selecting parameters:
 Output IDAT size = 2771 bytes (3764 bytes decrease)
 Output file size = 3666 bytes (3025 bytes = 45.21% decrease)
 
-rst2odt-wrapper -v  01_legal.rst sample-doc.odt
+rst2odt-wrapper -v  00_index.rst sample-doc.odt
 [Info] style=/usr/share/rst2odt/styles/rh/ja.odt, output opt=sample-doc.odt.
 unoconv -f pdf -o sample-doc.pdf sample-doc.odt
 ssato@localhost%                                               ~/repos/public/github.com/ssato/python-docutils-exts.git/examples/rst2odt
