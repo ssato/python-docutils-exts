@@ -75,6 +75,9 @@ make install DESTDIR=%{buildroot}
 %{_datadir}/rst2pdf/templates/slide/*
 
 %changelog
+* Fri Mar  9 2018 Satoru SATOH <ssato@redhat.com> - 0.1.99-1
+- New upstream release
+
 * Mon Feb 13 2017 Satoru SATOH <ssato@redhat.com> - 0.1.0-1
 - Follow API change in anyconfig, anyconfig.set_loglevel was removed
 
