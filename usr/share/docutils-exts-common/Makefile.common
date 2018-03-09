@@ -4,6 +4,7 @@ image_XCF_DATA	?= $(wildcard $(imagesdir)/*.xcf) $(wildcard $(imagesdir)/xcf/*.x
 image_PNG_DATA	?= $(wildcard $(imagesdir)/*.png) $(image_SVG_DATA:.svg=.png) $(image_XCF_DATA:.xcf=.png)
 image_PNG_OPT_LEVEL ?= 7
 
+ctx_SOURCES     ?= $(sort $(filter-out ../%/ctx.yml,$(wildcard ../*/*.yml)))
 templates_DATA	?= $(wildcard *.j2) $(wildcard */*.j2)
 
 # svg -> png
@@ -13,6 +14,9 @@ xcf2png = gimp_batch_convert_xcf2png.sh $< $@ && mv -f $@ $@.tmp && $(optpng)
 
 # j2 (jinja2 template) -> any
 tmplrender ?= anytemplate_cli -C ctx.yml -E jinja2 -v -o $@ $<
+
+ctx.yml: $(ctx_SOURCES)
+	anyconfig_cli --template $^ -o $@
 
 Makefile.depends:
 	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp
@@ -26,7 +30,7 @@ Makefile.depends:
 	done
 	for f in $(templates_DATA); do \
 		out=`echo $$f | sed -e 's/\.j2//g'`; \
-		echo -ne "$$out: $$f\n\t\$$(tmplrender)\n\n" >> $@.tmp; \
+		echo -ne "$$out: $$f ctx.yml\n\t\$$(tmplrender)\n\n" >> $@.tmp; \
 		echo "doc_SOURCES += $$out" >> $@.tmp; \
 	done
 	mv $@.tmp $@
