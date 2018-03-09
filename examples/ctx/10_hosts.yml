@@ -1,0 +1,26 @@
+hosts:
+  - ip: 192.168.122.1
+    fqdn: gw.example.com
+    hostname: gw
+    purpose: Default Gateway
+
+  - ip: 192.168.122.10
+    fqdn: lb.example.com
+    hostname: lb
+    purpose: Load Balancer
+
+  - ip: 192.168.122.20
+    fqdn: www-0.example.com
+    purpose: WWW Server
+
+  - ip: 192.168.122.21
+    fqdn: www-1.example.com
+    purpose: WWW Server
+
+  - ip: 192.168.122.22
+    fqdn: www-2.example.com
+    purpose: WWW Server
+
+  - ip: 192.168.122.30
+    fqdn: db-0.example.com
+    purpose: DB Server
