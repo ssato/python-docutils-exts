@@ -1,0 +1,66 @@
+ssato@localhost% make pkgdatadir=../../usr/share/rst2odt/aux/  ~/repos/public/github.com/ssato/python-docutils-exts.git/examples/rst2odt
+echo -ne "# Generated build-time dependencies:\n\n" > Makefile.depends.tmp
+for f in  images/svg/0.svg ; do \
+        out=`echo $f | sed -e 's/\.svg/.png/g'`; \
+        echo -ne "$out: $f\n\t\$(svg2png)\n\n" >> Makefile.depends.tmp; \
+done
+for f in  images/xcf/0.xcf ; do \
+        out=`echo $f | sed -e 's/\.xcf/.png/g'`; \
+        echo -ne "$out: $f\n\t\$(xcf2png)\n\n" >> Makefile.depends.tmp; \
+done
+for f in 00_index.rst.j2 20_template.rst.j2 ; do \
+        out=`echo $f | sed -e 's/\.j2//g'`; \
+        echo -ne "$out: $f ctx.yml\n\t\$(tmplrender)\n\n" >> Makefile.depends.tmp; \
+        echo "doc_SOURCES += $out" >> Makefile.depends.tmp; \
+done
+mv Makefile.depends.tmp Makefile.depends
+anyconfig_cli --template /home/ssato/repos/public/github.com/ssato/python-docutils-exts.git/examples/rst2odt/../ctx/10_hosts.yml /home/ssato/repos/public/github.com/ssato/python-docutils-exts.git/examples/rst2odt/../ctx/00_base.yml -o ctx.yml
+Loading: /home/ssato/repos/public/github.com/ssato/python-docutils-exts.git/examples/ctx/10_hosts.yml
+Loading: /home/ssato/repos/public/github.com/ssato/python-docutils-exts.git/examples/ctx/00_base.yml
+Dumping: ctx.yml
+anytemplate_cli -C ctx.yml -E jinja2 -v -o 00_index.rst 00_index.rst.j2
+anytemplate_cli -C ctx.yml -E jinja2 -v -o 20_template.rst 20_template.rst.j2
+inkscape -e images/svg/0.png.tmp images/svg/0.svg && optipng -o7 -fix -force images/svg/0.png.tmp && mv images/svg/0.png.tmp images/svg/0.png
+Background RRGGBBAA: ffffff00
+Area 0:0:455.281:320.969 exported to 455 x 321 pixels (96 dpi)
+Bitmap saved as: images/svg/0.png.tmp
+** Processing: images/svg/0.png.tmp
+455x321 pixels, 4x8 bits/pixel, RGB+alpha
+Input IDAT size = 14789 bytes
+Input file size = 14932 bytes
+
+Trying:
+  zc = 9  zm = 9  zs = 0  f = 0         IDAT size = 11589
+  zc = 9  zm = 8  zs = 0  f = 0         IDAT size = 11589
+
+Selecting parameters:
+  zc = 9  zm = 8  zs = 0  f = 0         IDAT size = 11589
+
+Output IDAT size = 11589 bytes (3200 bytes decrease)
+Output file size = 11720 bytes (3212 bytes = 21.51% decrease)
+
+gimp_batch_convert_xcf2png.sh images/xcf/0.xcf images/xcf/0.png && mv -f images/xcf/0.png images/xcf/0.png.tmp && optipng -o7 -fix -force images/xcf/0.png.tmp && mv images/xcf/0.png.tmp images/xcf/0.png
+Welcome to TinyScheme, Version 1.40
+Copyright (c) Dimitrios Souflis
+
+ts> (#t)
+ts> ** Processing: images/xcf/0.png.tmp
+640x400 pixels, 4x8 bits/pixel, RGB+alpha
+Reducing image to 8 bits/pixel, 244 colors in palette
+Input IDAT size = 6535 bytes
+Input file size = 6691 bytes
+
+Trying:
+  zc = 9  zm = 9  zs = 0  f = 0         IDAT size = 2771
+  zc = 9  zm = 8  zs = 0  f = 0         IDAT size = 2771
+
+Selecting parameters:
+  zc = 9  zm = 8  zs = 0  f = 0         IDAT size = 2771
+
+Output IDAT size = 2771 bytes (3764 bytes decrease)
+Output file size = 3666 bytes (3025 bytes = 45.21% decrease)
+
+rst2odt-wrapper -v  01_legal.rst sample-doc.odt
+[Info] style=/usr/share/rst2odt/styles/rh/ja.odt, output opt=sample-doc.odt.
+unoconv -f pdf -o sample-doc.pdf sample-doc.odt
+ssato@localhost%                                               ~/repos/public/github.com/ssato/python-docutils-exts.git/examples/rst2odt
