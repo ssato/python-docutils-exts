@@ -7,6 +7,10 @@ $(wildcard examples/rst2odt/logs/*.txt) \
 $(wildcard examples/rst2pdf/*) \
 $(NULL)
 
+TESTS = examples/runtests.sh
+
+dist_noinst_DATA = $(wildcard examples/*.sh)
+
 abs_srcdir  ?= .
 include $(abs_srcdir)/pkg/rpm.mk
 
