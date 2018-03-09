@@ -26,6 +26,12 @@ Requires:       python2-docutils
 %endif
 Requires:       inkscape, optipng, gimp
 Requires:       unoconv
+# It's available from my copr repo,
+# https://copr.fedorainfracloud.org/coprs/ssato/python-anyconfig/.
+# To enable it, run: dnf copr enable ssato/python-anyconfig
+Requires:       python-anytemplate
+Provides:       python-docutils-exts-bootstrap
+Obsoletes:      python-docutils-exts-bootstrap < 0.2.0
 
 %description    %{desc}
 
@@ -39,18 +45,6 @@ Requires:       rst2pdf
 Tools and misc related data to extend rst2pdf (reStructured Text to PDF
 convertor) for %{name}.
 
-%package        bootstrap
-Summary:        Bootstrap tool and data for %{name}
-Requires:       %{name} = %{version}-%{release}
-# It's available from my copr repo,
-# https://copr.fedorainfracloud.org/coprs/ssato/python-anyconfig/.
-# To enable it, run: dnf copr enable ssato/python-anyconfig
-Requires:       python-anytemplate
-
-%description    bootstrap %{desc}
-
-Bootstrap tool and misc related data for %{name}.
-
 %prep
 %autosetup -n %{name}-%{version}
 
@@ -60,10 +54,6 @@ make %{?_smp_mflags} V=0
 
 %install
 make install DESTDIR=%{buildroot}
-# Quick and dirty hack to make work w/ python3:
-%if %{with python3}
-sed -i '1s/python/&3/' %{buildroot}%{_bindir}/docutils-exts-bootstrap
-%endif
 
 %files
 %doc README.rst examples
@@ -83,11 +73,6 @@ sed -i '1s/python/&3/' %{buildroot}%{_bindir}/docutils-exts-bootstrap
 %{_datadir}/rst2pdf/styles/doc/*
 %{_datadir}/rst2pdf/styles/slides/*
 %{_datadir}/rst2pdf/templates/slide/*
-
-%files          bootstrap
-%{_bindir}/docutils-exts-bootstrap
-%{_datadir}/docutils-exts-common/templates/*.j2
-%{_datadir}/rst2*/templates/default/*
 
 %changelog
 * Mon Feb 13 2017 Satoru SATOH <ssato@redhat.com> - 0.1.0-1
