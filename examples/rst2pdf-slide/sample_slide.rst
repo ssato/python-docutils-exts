@@ -3,7 +3,7 @@ Sample slide
 ================
 
 :author: Satoru SATOH <ssato@redhat.com>
-:version: 20130228.1
+:version: {{ doc.revision|default('20180309.1') }}
 
 .. raw:: pdf
 
