@@ -1,2 +1,3 @@
-NAME = sample-doc
-include /usr/share/rst2odt/aux/Makefile
+NAME ?= sample-doc
+pkgdatadir ?= /usr/share/rst2odt/aux
+include $(pkgdatadir)/Makefile
