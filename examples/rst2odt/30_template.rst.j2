@@ -1,0 +1,14 @@
+﻿テンプレートの例
+==================
+
+リスト
+-------
+
+.. csv-table:: ホスト一覧
+   :header: "IP アドレス", "FQDN", "用途"
+   :widths: 16, 18, 40
+
+   {% for h in hosts if h.ip and h.fqdn %}{{ h.ip }}, {{ h.fqdn }}, {{ h.purpose }}
+   {% endfor %}
+
+.. vim:sw=2:ts=2:et:
