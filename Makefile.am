@@ -46,9 +46,6 @@ dist_pkgdata8_DATA = $(wildcard usr/share/rst2pdf/aux/*)
 pkgdata9dir = $(datadir)/docutils-exts-common
 dist_pkgdata9_DATA = usr/share/docutils-exts-common/Makefile.common pkg/rpm.mk
 
-pkgdata10dir = $(datadir)/docutils-exts-common/templates
-dist_pkgdata10_DATA = usr/share/docutils-exts-common/templates/Makefile.j2
-
 pkgdata11dir = $(datadir)/rst2odt/templates/default
 dist_pkgdata11_DATA = $(wildcard usr/share/rst2odt/templates/default/*)
 
