@@ -25,7 +25,8 @@ Requires:       python3-docutils
 Requires:       python2-docutils
 %endif
 Requires:       inkscape, optipng, gimp
-Requires:       unoconv
+Requires:       libreoffice-headless
+Requires:       libreoffice-writer
 # It's available from my copr repo,
 # https://copr.fedorainfracloud.org/coprs/ssato/python-anyconfig/.
 # To enable it, run: dnf copr enable ssato/python-anyconfig
