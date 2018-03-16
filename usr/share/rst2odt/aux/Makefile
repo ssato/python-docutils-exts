@@ -36,6 +36,10 @@ endif
 $(doc_ODT): $(doc_SOURCES) $(image_PNG_DATA) $(txt_DATA)
 	$(_rst2odt) $< $@
 
+# TODO: Switch to use libreoffice only (w/o unoconv)
+# libreoffice --headless --convert-to pdf $<
+# libreoffice --headless --convert-to doc $<
+
 pdf: $(doc_PDF)
 $(doc_PDF): $(doc_ODT)
 	unoconv -f pdf -o $@ $<

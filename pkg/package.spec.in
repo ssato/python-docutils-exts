@@ -26,6 +26,9 @@ Requires:       python2-docutils
 %endif
 Requires:       inkscape, optipng, gimp
 Requires:       unoconv
+# TODO: Switch to libreoffice only if update-{all,index} problem was solved.
+#Requires:       libreoffice-headless
+#Requires:       libreoffice-writer
 # It's available from my copr repo,
 # https://copr.fedorainfracloud.org/coprs/ssato/python-anyconfig/.
 # To enable it, run: dnf copr enable ssato/python-anyconfig

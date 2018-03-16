@@ -123,6 +123,9 @@ fi
 if test $topdf -eq 1; then
     pdf_output=${output%.odt}.pdf
     unoconv -f pdf -o $pdf_output $output
+    #libreoffice --headless --convert-to pdf $output
+else
+    :
 fi
 
 # vim:sw=4:ts=4:et:
