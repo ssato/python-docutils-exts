@@ -5,7 +5,10 @@ $(wildcard examples/rst2odt/*) \
 $(wildcard examples/rst2odt/images/*/*.*) \
 $(wildcard examples/rst2odt/logs/*.txt) \
 $(wildcard examples/rst2pdf/*) \
+$(shell find usr/share/rst2odt/styles/ -type f) \
 $(NULL)
+
+files_to_odt = zip -0X ../$(notdir $@) mimetype && zip -r ../$(notdir $@) * -x mimetype
 
 TESTS = examples/runtests.sh
 
@@ -26,7 +29,15 @@ pkgdata2dir = $(datadir)/rst2odt/aux
 dist_pkgdata2_DATA = $(wildcard usr/share/rst2odt/aux/*)
 
 pkgdata3dir = $(datadir)/rst2odt/styles
-dist_pkgdata3_DATA = $(wildcard usr/share/rst2odt/styles/*)
+dist_pkgdata3_DATA = \
+usr/share/rst2odt/styles/en.odt \
+usr/share/rst2odt/styles/ja.odt
+
+usr/share/rst2odt/styles/en.odt: $(wildcard usr/share/rst2odt/styles/en/*.xml)
+	cd $(dir $@)/en && $(files_to_odt)
+
+usr/share/rst2odt/styles/ja.odt: $(wildcard usr/share/rst2odt/styles/ja/*.xml)
+	cd $(dir $@)/ja && $(files_to_odt)
 
 pkgdata4dir = $(datadir)/rst2pdf/images
 dist_pkgdata4_DATA = $(wildcard usr/share/rst2pdf/images/*)
