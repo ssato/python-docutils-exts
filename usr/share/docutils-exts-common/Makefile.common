@@ -9,7 +9,7 @@ templates_DATA	?= $(wildcard *.j2) $(wildcard */*.j2)
 
 # svg -> png
 optpng = optipng -o$(image_PNG_OPT_LEVEL) -fix -force $@.tmp && mv $@.tmp $@
-svg2png = inkscape -e $@.tmp $< && $(optpng)
+svg2png = inkscape -o $@.tmp $< && $(optpng)
 xcf2png = gimp_batch_convert_xcf2png.sh $< $@ && mv -f $@ $@.tmp && $(optpng)
 
 # j2 (jinja2 template) -> any
