@@ -8,9 +8,9 @@ ctx_SOURCES     ?= $(filter-out ../%/ctx.yml,$(wildcard ../*/*.yml))
 templates_DATA	?= $(wildcard *.j2) $(wildcard */*.j2)
 
 # svg -> png
-optpng = optipng -o$(image_PNG_OPT_LEVEL) -fix -force $@.tmp && mv $@.tmp $@
-svg2png = inkscape --export-type=png -o $@.tmp $< && $(optpng)
-xcf2png = gimp_batch_convert_xcf2png.sh $< $@ && mv -f $@ $@.tmp && $(optpng)
+optpng = optipng -o$(image_PNG_OPT_LEVEL) -fix -force $@.tmp.png && mv $@.tmp.png $@
+svg2png = inkscape --export-type=png -o $@.tmp.png $< && $(optpng)
+xcf2png = gimp_batch_convert_xcf2png.sh $< $@ && mv -f $@ $@.tmp.png && $(optpng)
 
 # j2 (jinja2 template) -> any
 tmplrender ?= anytemplate_cli -C ctx.yml -E jinja2 -v -o $@ $<
@@ -19,10 +19,10 @@ ctx.yml: $(sort $(ctx_SOURCES))
 	anyconfig_cli --template $^ -o $@
 
 Makefile.depends:
-	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp
+	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp.png
 	for f in $(image_SVG_DATA); do \
 		out=`echo $$f | sed -e 's/\.svg/.png/g'`; \
-		echo -ne "$$out: $$f\n\t\$$(svg2png)\n\n" >> $@.tmp; \
+		echo -ne "$$out: $$f\n\t\$$(svg2png)\n\n" >> $@.tmp.png; \
 	done
 	for f in $(image_XCF_DATA); do \
 		out=`echo $$f | sed -e 's/\.xcf/.png/g'`; \
