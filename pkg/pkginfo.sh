@@ -1,3 +1,3 @@
 PACKAGE=python-docutils-exts
-VERSION=0.2.0
+VERSION=0.2.1
 _SNAPSHOT_BUILD=1
