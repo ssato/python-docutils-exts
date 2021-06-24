@@ -19,10 +19,10 @@ ctx.yml: $(sort $(ctx_SOURCES))
 	anyconfig_cli --template $^ -o $@
 
 Makefile.depends:
-	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp.png
+	echo -ne "# Generated build-time dependencies:\n\n" > $@.tmp
 	for f in $(image_SVG_DATA); do \
 		out=`echo $$f | sed -e 's/\.svg/.png/g'`; \
-		echo -ne "$$out: $$f\n\t\$$(svg2png)\n\n" >> $@.tmp.png; \
+		echo -ne "$$out: $$f\n\t\$$(svg2png)\n\n" >> $@.tmp; \
 	done
 	for f in $(image_XCF_DATA); do \
 		out=`echo $$f | sed -e 's/\.xcf/.png/g'`; \
