@@ -12,6 +12,7 @@ License:        MIT
 URL:            https://github.com/ssato/python-docutils-exts
 Source0:        %{name}-%{version}.tar.xz
 BuildArch:      noarch
+BuildRequires:  make
 Requires:       ipa-ex-gothic-fonts, ipa-ex-mincho-fonts, ipa-mincho-fonts, ipa-gothic-fonts
 Requires:       python3-docutils
 Requires:       inkscape, optipng, gimp
